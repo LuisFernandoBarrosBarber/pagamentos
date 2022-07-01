@@ -27,6 +27,7 @@ public class ClienteService {
 
     @Transactional
     public Cliente novo(String nome, Long id) {
+        test(id);
         ClienteEntity c = salvamentoInicial(id);
         try {
             AsaasCliente asaasCliente = asaasClient.novoCliente(
@@ -40,7 +41,6 @@ public class ClienteService {
             log.error("ERRO AO SALVAR CLIENTE. CLIENTE ID: " + id, e);
             throw e;
         }
-        //asaasClient.getCobranca("01176394");
 
         return toCliente.apply(c);
     }
@@ -52,6 +52,12 @@ public class ClienteService {
         c.setCriadoEm(now());
         c.setId(id);
         return repo.save(c);
+    }
+
+    private void test(Long id) {
+        if (repo.countAllByIdAndAtivoIsTrue(id) > 0) {
+            throw new RuntimeException("Cliente já cadastrado");
+        }
     }
 
 }
