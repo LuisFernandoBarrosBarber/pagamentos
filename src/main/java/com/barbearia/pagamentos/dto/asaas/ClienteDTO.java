@@ -7,4 +7,5 @@ import lombok.Data;
 @Data
 public class ClienteDTO {
     String name;
+    String externalReference;
 }
