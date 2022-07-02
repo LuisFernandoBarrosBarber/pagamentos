@@ -1,7 +1,9 @@
 package com.barbearia.pagamentos.client;
 
 import com.barbearia.pagamentos.configuration.OAuthFeignConfig;
+import com.barbearia.pagamentos.dto.asaas.AssinaturaDTO;
 import com.barbearia.pagamentos.dto.asaas.ClienteDTO;
+import com.barbearia.pagamentos.model.asaas.AsaasAssinatura;
 import com.barbearia.pagamentos.model.asaas.AsaasCliente;
 import com.barbearia.pagamentos.model.asaas.AsaasCobranca;
 import feign.Headers;
@@ -20,6 +22,10 @@ public interface AsaasClient {
     @PostMapping("customers")
     @Headers("Content-Type: application/json")
     AsaasCliente novoCliente(@RequestBody ClienteDTO cliente);
+
+    @PostMapping("subscriptions")
+    @Headers("Content-Type: application/json")
+    AsaasAssinatura novaAssinatura(@RequestBody AssinaturaDTO assinatura);
 
     @GetMapping("payments/{id}")
     AsaasCobranca getCobranca(@PathVariable("id") String id);

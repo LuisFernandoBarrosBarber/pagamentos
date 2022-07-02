@@ -24,25 +24,23 @@ public class ClienteService {
     private final AsaasClient asaasClient;
     private final ClienteRepository repo;
     private final ClienteEntityToCliente toCliente;
+    private final AssinaturaService assinaturaService;
 
     @Transactional
-    public Cliente novo(String nome, Long id) {
+    public Cliente novo(String nome, Long id, String cpf) {
         test(id);
         ClienteEntity c = salvamentoInicial(id);
         try {
-            AsaasCliente asaasCliente = asaasClient.novoCliente(
-                    ClienteDTO.builder()
-                            .name(nome)
-                            .externalReference(id.toString())
-                            .build());
+            AsaasCliente asaasCliente = asaasClient.novoCliente(getDTO(nome, id, cpf));
             c.setIdAsaas(asaasCliente.getId());
-
         } catch (Exception e) {
             log.error("ERRO AO SALVAR CLIENTE. CLIENTE ID: " + id, e);
             throw e;
         }
 
-        return toCliente.apply(c);
+        Cliente cliente = toCliente.apply(c);
+        assinaturaService.assinar(cliente);
+        return cliente;
     }
 
     @Transactional(REQUIRES_NEW)
@@ -55,9 +53,16 @@ public class ClienteService {
     }
 
     private void test(Long id) {
-        if (repo.countAllByIdAndAtivoIsTrue(id) > 0) {
+        if (repo.countAllByIdAndAtivoIsTrueAndIdAsaasNotNull(id) > 0) {
             throw new RuntimeException("Cliente já cadastrado");
         }
     }
 
+    private static ClienteDTO getDTO(String nome, Long id, String cpf) {
+        return ClienteDTO.builder()
+                .name(nome)
+                .externalReference(id.toString())
+                .cpfCnpj(cpf)
+                .build();
+    }
 }

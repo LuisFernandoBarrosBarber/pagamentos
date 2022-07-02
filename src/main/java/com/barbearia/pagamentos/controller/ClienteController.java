@@ -17,7 +17,8 @@ public class ClienteController {
 
     @PostMapping(value = "novo")
     public Cliente novo(@RequestParam("nome") String nome,
-            @RequestParam("id") Long id) {
-        return service.novo(nome, id);
+            @RequestParam("id") Long id,
+            @RequestParam("cpf") String cpf) {
+        return service.novo(nome, id, cpf);
     }
 }
