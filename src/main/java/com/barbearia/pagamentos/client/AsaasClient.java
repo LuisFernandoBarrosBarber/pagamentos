@@ -5,7 +5,7 @@ import com.barbearia.pagamentos.dto.asaas.AssinaturaDTO;
 import com.barbearia.pagamentos.dto.asaas.ClienteDTO;
 import com.barbearia.pagamentos.model.asaas.AsaasAssinatura;
 import com.barbearia.pagamentos.model.asaas.AsaasCliente;
-import com.barbearia.pagamentos.model.asaas.AsaasCobranca;
+import com.barbearia.pagamentos.model.asaas.AsaasCobrancas;
 import feign.Headers;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +27,9 @@ public interface AsaasClient {
     @Headers("Content-Type: application/json")
     AsaasAssinatura novaAssinatura(@RequestBody AssinaturaDTO assinatura);
 
-    @GetMapping("payments/{id}")
-    AsaasCobranca getCobranca(@PathVariable("id") String id);
+//    @GetMapping("payments/{id}")
+//    AsaasCobranca getCobranca(@PathVariable("id") String id);
+
+    @GetMapping("subscriptions/{id}/payments")
+    AsaasCobrancas getCobrancas(@PathVariable("id") String id);
 }

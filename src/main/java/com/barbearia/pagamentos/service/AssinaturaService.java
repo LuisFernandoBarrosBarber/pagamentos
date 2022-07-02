@@ -7,6 +7,7 @@ import com.barbearia.pagamentos.model.Assinatura;
 import com.barbearia.pagamentos.model.Cliente;
 import com.barbearia.pagamentos.model.Contrato;
 import com.barbearia.pagamentos.model.asaas.AsaasAssinatura;
+import com.barbearia.pagamentos.model.asaas.AsaasCobrancas;
 import com.barbearia.pagamentos.repository.AssinaturaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,10 @@ public class AssinaturaService {
 
     }
 
+    public AsaasCobrancas getCobrancas(String assinaturaId) {
+        return asaasClient.getCobrancas(assinaturaId);
+    }
+
     private static AssinaturaDTO getDTO(Cliente c, Contrato co) {
         return AssinaturaDTO.builder()
                 .billingType(UNDEFINED)
@@ -57,7 +62,7 @@ public class AssinaturaService {
                 .build();
     }
 
-    public void save(AsaasAssinatura a, Cliente c) {
+    private void save(AsaasAssinatura a, Cliente c) {
         AssinaturaEntity entity = new AssinaturaEntity();
         entity.setIdAssinatura(a.getId());
         entity.setIdCliente(c.getId());
