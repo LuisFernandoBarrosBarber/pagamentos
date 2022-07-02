@@ -24,7 +24,6 @@ public class ClienteService {
     private final AsaasClient asaasClient;
     private final ClienteRepository repo;
     private final ClienteEntityToCliente toCliente;
-    private final AssinaturaService assinaturaService;
 
     @Transactional
     public Cliente novo(String nome, Long id, String cpf) {
@@ -37,10 +36,7 @@ public class ClienteService {
             log.error("ERRO AO SALVAR CLIENTE. CLIENTE ID: " + id, e);
             throw e;
         }
-
-        Cliente cliente = toCliente.apply(c);
-        assinaturaService.assinar(cliente);
-        return cliente;
+        return toCliente.apply(c);
     }
 
     @Transactional(REQUIRES_NEW)
