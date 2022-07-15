@@ -2,7 +2,7 @@ package com.barbearia.pagamentos.dto.asaas.enumerator;
 
 public enum StatusCobranca {
     PENDING,
-    ECEIVED,
+    RECEIVED,
     CONFIRMED,
     OVERDUE,
     RECEIVED_IN_CASH,

@@ -62,6 +62,15 @@ public class AssinaturaService {
                 .build();
     }
 
+    @Transactional
+    public Assinatura getByCliente(Long id) {
+
+        AssinaturaEntity a = repo.getByIdClienteAndAtivoIsTrue(id)
+                .orElseThrow(() -> new RuntimeException("Assinatura não encontrada."));
+
+        return Assinatura.builder().idAsaas(a.getIdAssinatura()).build();
+    }
+
     private void save(AsaasAssinatura a, Cliente c) {
         AssinaturaEntity entity = new AssinaturaEntity();
         entity.setIdAssinatura(a.getId());
