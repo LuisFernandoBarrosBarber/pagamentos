@@ -1,6 +1,7 @@
 package com.barbearia.pagamentos.service;
 
 import com.barbearia.pagamentos.client.AsaasClient;
+import com.barbearia.pagamentos.configuration.excetion.ResourceNotFoundException;
 import com.barbearia.pagamentos.dto.asaas.AssinaturaDTO;
 import com.barbearia.pagamentos.entities.AssinaturaEntity;
 import com.barbearia.pagamentos.model.Assinatura;
@@ -66,7 +67,7 @@ public class AssinaturaService {
     public Assinatura getByCliente(Long id) {
 
         AssinaturaEntity a = repo.getByIdClienteAndAtivoIsTrue(id)
-                .orElseThrow(() -> new RuntimeException("Assinatura não encontrada."));
+                .orElseThrow(() -> new ResourceNotFoundException("Assinatura não encontrada."));
 
         return Assinatura.builder().idAsaas(a.getIdAssinatura()).build();
     }
