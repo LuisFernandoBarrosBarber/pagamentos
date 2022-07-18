@@ -1,15 +1,20 @@
 package com.barbearia.pagamentos.service;
 
 import com.barbearia.pagamentos.client.AsaasClient;
+import com.barbearia.pagamentos.configuration.excetion.ResourceNotFoundException;
 import com.barbearia.pagamentos.converter.ClienteEntityToCliente;
 import com.barbearia.pagamentos.dto.asaas.ClienteDTO;
 import com.barbearia.pagamentos.entities.ClienteEntity;
+import com.barbearia.pagamentos.model.Assinatura;
 import com.barbearia.pagamentos.model.Cliente;
+import com.barbearia.pagamentos.model.Cobranca;
 import com.barbearia.pagamentos.model.asaas.AsaasCliente;
 import com.barbearia.pagamentos.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -24,6 +29,8 @@ public class ClienteService {
     private final AsaasClient asaasClient;
     private final ClienteRepository repo;
     private final ClienteEntityToCliente toCliente;
+    private final CobrancaService cobrancaService;
+    private final AssinaturaService assinaturaService;
 
     @Transactional
     public Cliente novo(String nome, Long id, String cpf) {
@@ -37,6 +44,14 @@ public class ClienteService {
             throw e;
         }
         return toCliente.apply(c);
+    }
+
+    public List<Cobranca> getCobrancasByCliente(Long id) {
+        if (repo.findByIdAndAtivoIsTrue(id).isEmpty()) {
+            throw new ResourceNotFoundException("Cliente não encontrado ou inativado.");
+        }
+        Assinatura a = assinaturaService.getByCliente(id);
+        return cobrancaService.getByAssinatura(a.getIdAsaas());
     }
 
     @Transactional(REQUIRES_NEW)

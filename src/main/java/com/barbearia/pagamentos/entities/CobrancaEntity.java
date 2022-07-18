@@ -1,5 +1,6 @@
 package com.barbearia.pagamentos.entities;
 
+import com.barbearia.pagamentos.dto.asaas.enumerator.BillingTypeEnum;
 import com.barbearia.pagamentos.dto.asaas.enumerator.StatusCobranca;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +17,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CobrancaEntity  {
+public class CobrancaEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -43,4 +44,14 @@ public class CobrancaEntity  {
 
     @Column
     private LocalDateTime pagamentoEm;
+
+    @Column(nullable = false)
+    private BillingTypeEnum tipoPagamento;
+
+    @Column(nullable = false)
+    private String invoiceUrl;
+
+    @Column(nullable = false)
+    private float valor;
+
 }
