@@ -30,6 +30,7 @@ public class AssinaturaService {
 
     private final AssinaturaRepository repo;
     private final AsaasClient asaasClient;
+    private final CobrancaService cobrancaService;
 
     @Transactional
     public Assinatura assinar(Cliente c, Contrato co) {
@@ -38,9 +39,10 @@ public class AssinaturaService {
         AsaasAssinatura assinatura;
         try {
             assinatura = asaasClient.novaAssinatura(getDTO(c, co));
+            salvaCobrancas(assinatura);
             save(assinatura, c);
         } catch (Exception e) {
-            log.error("ERRO AO GERAR ASSINATURA DO CLIENTE " + c.getId(), e);
+            log.error("ERRO AO GERAR ASSINATURA/COBRANCA DO CLIENTE " + c.getId(), e);
             throw e;
         }
 
@@ -48,7 +50,14 @@ public class AssinaturaService {
 
     }
 
-    public AsaasCobrancas getCobrancas(String assinaturaId) {
+    @Transactional
+    public void salvaCobrancas(AsaasAssinatura a) {
+        getCobrancasByAssinatura(a.getId())
+                .getData()
+                .forEach(cobrancaService::nova);
+    }
+
+    public AsaasCobrancas getCobrancasByAssinatura(String assinaturaId) {
         return asaasClient.getCobrancas(assinaturaId);
     }
 

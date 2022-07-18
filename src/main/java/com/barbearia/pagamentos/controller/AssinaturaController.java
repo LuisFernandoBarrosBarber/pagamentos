@@ -18,7 +18,7 @@ public class AssinaturaController {
 
     @GetMapping("{id}/cobrancas")
     public AsaasCobrancas getCobrancas(@PathVariable("id") String idAssinatura) {
-        return service.getCobrancas(idAssinatura);
+        return service.getCobrancasByAssinatura(idAssinatura);
     }
 
     @GetMapping("get-by-cliente/{id}")
