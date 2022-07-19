@@ -1,24 +1,22 @@
 package com.barbearia.pagamentos.controller;
 
-import com.barbearia.pagamentos.model.Cobranca;
-import com.barbearia.pagamentos.service.ClienteService;
+import com.barbearia.pagamentos.model.asaas.AsaasCobrancas;
+import com.barbearia.pagamentos.service.AssinaturaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("cliente")
+@RequestMapping("assinatura")
 @RequiredArgsConstructor
-public class ClienteController {
+public class AssinaturaController {
 
-    private final ClienteService service;
+    private final AssinaturaService service;
 
     @GetMapping("{id}/cobrancas")
-    public List<Cobranca> getCobrancas(@PathVariable("id") Long id) {
-        return service.getCobrancasByCliente(id);
+    public AsaasCobrancas getCobrancas(@PathVariable("id") String idAssinatura) {
+        return service.getCobrancasByAssinatura(idAssinatura);
     }
 }
