@@ -27,6 +27,12 @@ public interface AsaasClient {
     @Headers("Content-Type: application/json")
     AsaasAssinatura novaAssinatura(@RequestBody AssinaturaDTO assinatura);
 
+    @PostMapping("subscriptions/{id}")
+    @Headers("Content-Type: application/json")
+    AsaasAssinatura updateAssinatura(@PathVariable("id") String id,
+            @RequestBody AssinaturaDTO assinatura);
+
+// COMENTADO EM 21/07/2022 (SE NAO FIZER FALTA, EXCLUIR)
 //    @GetMapping("payments/{id}")
 //    AsaasCobranca getCobranca(@PathVariable("id") String id);
 

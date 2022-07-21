@@ -57,6 +57,16 @@ public class AssinaturaService {
                 .forEach(cobrancaService::nova);
     }
 
+    @Transactional
+    public Assinatura updateAssinatura(String id, Float value) {
+        AssinaturaDTO a = AssinaturaDTO.builder()
+                .value(value)
+                .build();
+        return Assinatura.builder()
+                .idAsaas(asaasClient.updateAssinatura(id, a).getId())
+                .build();
+    }
+
     public AsaasCobrancas getCobrancasByAssinatura(String assinaturaId) {
         return asaasClient.getCobrancas(assinaturaId);
     }
