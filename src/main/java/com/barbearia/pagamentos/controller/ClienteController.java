@@ -20,6 +20,11 @@ public class ClienteController {
         return service.getCobrancasByCliente(id);
     }
 
+    @GetMapping("{id}/last-cobranca-paga")
+    public Cobranca getLastCobrancaPaga(@PathVariable("id") Long id) {
+        return service.getLastCobrancaPaga(id);
+    }
+
     @PostMapping("{id}/update-assinatura")
     public Assinatura updateAssinatura(@PathVariable("id") Long id,
             @RequestParam("value") float value) {

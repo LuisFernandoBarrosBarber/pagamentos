@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import static com.barbearia.pagamentos.dto.asaas.enumerator.StatusCobranca.RECEIVED;
 import static java.time.LocalDateTime.now;
 
 @Service
@@ -29,22 +30,16 @@ public class CobrancaService {
     public List<Cobranca> getByAssinatura(String assinaturaId) {
 
         return repo.getByIdAssinaturaAndAtivoIsTrue(assinaturaId)
-                .map(c -> {
-                    return Cobranca.builder()
-                            .id(c.getId())
-                            .idCobranca(c.getIdCobranca())
-                            .idAssinatura(c.getIdAssinatura())
-                            .ativo(c.isAtivo())
-                            .criadoEm(c.getCriadoEm())
-                            .pagamentoEm(c.getPagamentoEm())
-                            .status(c.getStatus())
-                            .vencimentoEm(c.getVencimentoEm())
-                            .valor(c.getValor())
-                            .invoiceUrl(c.getInvoiceUrl())
-                            .tipoPagamento(c.getTipoPagamento())
-                            .build();
-                })
+                .map(this::toCobranca)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Cobranca getLastCobrancaPagaByAssinatura(String idAsaas) {
+        return repo.findFirstByAtivoIsTrueAndIdAssinaturaAndStatusOrderByVencimentoEm(idAsaas, RECEIVED)
+                .map(this::toCobranca)
+                .orElse(Cobranca.builder().build());
+
     }
 
     private CobrancaEntity getEntity(AsaasCobrancaData ca) {
@@ -61,4 +56,19 @@ public class CobrancaService {
         return c;
     }
 
+    private Cobranca toCobranca(CobrancaEntity c) {
+        return Cobranca.builder()
+                .id(c.getId())
+                .idCobranca(c.getIdCobranca())
+                .idAssinatura(c.getIdAssinatura())
+                .ativo(c.isAtivo())
+                .criadoEm(c.getCriadoEm())
+                .pagamentoEm(c.getPagamentoEm())
+                .status(c.getStatus())
+                .vencimentoEm(c.getVencimentoEm())
+                .valor(c.getValor())
+                .invoiceUrl(c.getInvoiceUrl())
+                .tipoPagamento(c.getTipoPagamento())
+                .build();
+    }
 }

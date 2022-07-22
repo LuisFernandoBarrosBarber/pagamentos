@@ -57,6 +57,12 @@ public class ClienteService {
         return cobrancaService.getByAssinatura(a.getIdAsaas());
     }
 
+    public Cobranca getLastCobrancaPaga(Long id) {
+        testClienteExists(id);
+        Assinatura a = assinaturaService.getByCliente(id);
+        return cobrancaService.getLastCobrancaPagaByAssinatura(a.getIdAsaas());
+    }
+
     public ClienteEntity save(Long id, String idAssas) {
         ClienteEntity c = new ClienteEntity();
         c.setAtivo(true);
