@@ -1,6 +1,7 @@
 package com.barbearia.pagamentos.controller;
 
 import com.barbearia.pagamentos.model.Assinatura;
+import com.barbearia.pagamentos.model.Cliente;
 import com.barbearia.pagamentos.model.Cobranca;
 import com.barbearia.pagamentos.service.ClienteService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,12 @@ public class ClienteController {
     public Assinatura updateAssinatura(@PathVariable("id") Long id,
             @RequestParam("value") float value) {
         return service.updateAssinatura(id, value);
+    }
+
+    @PostMapping
+    public Cliente novo(@RequestParam("id") Long id, @RequestParam("nome") String nome,
+            @RequestParam("cpf") String cpf) {
+        return service.novo(nome, id, cpf);
     }
 
     @DeleteMapping("{id}/cancelar-assinatura")
