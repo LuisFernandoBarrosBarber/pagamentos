@@ -7,4 +7,5 @@ import lombok.Data;
 @Builder
 public class Assinatura {
     String idAsaas;
+    boolean ativo;
 }

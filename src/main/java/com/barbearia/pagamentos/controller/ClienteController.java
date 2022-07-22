@@ -30,4 +30,10 @@ public class ClienteController {
             @RequestParam("value") float value) {
         return service.updateAssinatura(id, value);
     }
+
+    @DeleteMapping("{id}/cancelar-assinatura")
+    public Assinatura cancelarAssinatura(@PathVariable("id") Long id) {
+        return service.cancelarAssinatura(id);
+    }
+
 }

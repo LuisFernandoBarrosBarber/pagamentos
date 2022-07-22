@@ -3,16 +3,10 @@ package com.barbearia.pagamentos.client;
 import com.barbearia.pagamentos.configuration.OAuthFeignConfig;
 import com.barbearia.pagamentos.dto.asaas.AssinaturaDTO;
 import com.barbearia.pagamentos.dto.asaas.ClienteDTO;
-import com.barbearia.pagamentos.model.asaas.AsaasAssinatura;
-import com.barbearia.pagamentos.model.asaas.AsaasCliente;
-import com.barbearia.pagamentos.model.asaas.AsaasCobrancaData;
-import com.barbearia.pagamentos.model.asaas.AsaasCobrancas;
+import com.barbearia.pagamentos.model.asaas.*;
 import feign.Headers;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient(
         url = "https://sandbox.asaas.com/api/v3",
@@ -38,4 +32,7 @@ public interface AsaasClient {
 
     @GetMapping("subscriptions/{id}/payments")
     AsaasCobrancas getCobrancas(@PathVariable("id") String id);
+
+    @DeleteMapping("subscriptions/{id}/")
+    AsaasAssinaturaCancelada cancelarAssinatura(@PathVariable("id") String id);
 }
