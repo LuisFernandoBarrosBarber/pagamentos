@@ -36,4 +36,11 @@ public class ExceptionsHandler {
             return new Erro(DEFAULT_MSG);
         }
     }
+
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
+    @ExceptionHandler({RuntimeException.class})
+    @ResponseBody
+    public Erro handleErrorServidor(RuntimeException e) {
+        return new Erro(DEFAULT_MSG + " Erro: " + e.getMessage());
+    }
 }

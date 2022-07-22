@@ -5,6 +5,7 @@ import com.barbearia.pagamentos.dto.asaas.AssinaturaDTO;
 import com.barbearia.pagamentos.dto.asaas.ClienteDTO;
 import com.barbearia.pagamentos.model.asaas.AsaasAssinatura;
 import com.barbearia.pagamentos.model.asaas.AsaasCliente;
+import com.barbearia.pagamentos.model.asaas.AsaasCobrancaData;
 import com.barbearia.pagamentos.model.asaas.AsaasCobrancas;
 import feign.Headers;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -32,9 +33,8 @@ public interface AsaasClient {
     AsaasAssinatura updateAssinatura(@PathVariable("id") String id,
             @RequestBody AssinaturaDTO assinatura);
 
-// COMENTADO EM 21/07/2022 (SE NAO FIZER FALTA, EXCLUIR)
-//    @GetMapping("payments/{id}")
-//    AsaasCobranca getCobranca(@PathVariable("id") String id);
+    @GetMapping("payments/{id}")
+    AsaasCobrancaData getCobranca(@PathVariable("id") String id);
 
     @GetMapping("subscriptions/{id}/payments")
     AsaasCobrancas getCobrancas(@PathVariable("id") String id);
