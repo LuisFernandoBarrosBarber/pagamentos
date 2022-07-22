@@ -36,4 +36,9 @@ public class ClienteController {
         return service.cancelarAssinatura(id);
     }
 
+    @GetMapping("{id}/assinatura")
+    public Assinatura getAssinatura(@PathVariable("id") Long id) {
+        return service.getAssinatura(id);
+    }
+
 }

@@ -59,13 +59,11 @@ public class AssinaturaService {
 
     @Transactional
     public Assinatura updateAssinatura(String id, Float value) {
-        AssinaturaEntity e = getEntityById(id);
         AssinaturaDTO a = AssinaturaDTO.builder()
                 .value(value)
                 .build();
         return Assinatura.builder()
                 .idAsaas(asaasClient.updateAssinatura(id, a).getId())
-                .ativo(e.isAtivo())
                 .build();
     }
 
@@ -76,7 +74,6 @@ public class AssinaturaService {
 
         return Assinatura.builder()
                 .idAsaas(asaasClient.cancelarAssinatura(id).getId())
-                .ativo(e.isAtivo())
                 .build();
     }
 
@@ -101,7 +98,9 @@ public class AssinaturaService {
         AssinaturaEntity a = repo.getByIdClienteAndAtivoIsTrue(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Assinatura não encontrada ou finalizada."));
 
-        return Assinatura.builder().idAsaas(a.getIdAssinatura()).build();
+        return Assinatura.builder()
+                .idAsaas(a.getIdAssinatura())
+                .build();
     }
 
 

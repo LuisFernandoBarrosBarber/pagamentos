@@ -33,7 +33,13 @@ public class ClienteService {
 
     @Transactional
     public Cliente novo(String nome, Long id, String cpf) {
-        testAlreadyAssinado(id);
+
+        if (alreadyCadastrado(id)) {
+            return repo.findById(id)
+                    .map(toCliente)
+                    .orElse(Cliente.builder().build());
+        }
+
         try {
             AsaasCliente c = asaasClient.novoCliente(getDTO(nome, id, cpf));
             ClienteEntity entity = save(id, c.getId());
@@ -58,6 +64,11 @@ public class ClienteService {
         return assinaturaService.cancelarAssinatura(a.getIdAsaas());
     }
 
+    public Assinatura getAssinatura(Long id) {
+        testClienteExists(id);
+        return assinaturaService.getByCliente(id);
+    }
+
     public List<Cobranca> getCobrancasByCliente(Long id) {
         testClienteExists(id);
         Assinatura a = assinaturaService.getByCliente(id);
@@ -79,10 +90,8 @@ public class ClienteService {
         return repo.save(c);
     }
 
-    private void testAlreadyAssinado(Long id) {
-        if (repo.countAllByIdAndAtivoIsTrueAndIdAsaasNotNull(id) > 0) {
-            throw new RuntimeException("Cliente já cadastrado");
-        }
+    private boolean alreadyCadastrado(Long id) {
+        return repo.countAllByIdAndAtivoIsTrueAndIdAsaasNotNull(id) > 0;
     }
 
     private void testClienteExists(Long id) {
