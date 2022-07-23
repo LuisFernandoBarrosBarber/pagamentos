@@ -35,9 +35,13 @@ public class ClienteService {
     public Cliente novo(String nome, Long id, String cpf) {
 
         if (alreadyCadastrado(id)) {
-            return repo.findById(id)
+            Cliente c = repo.findById(id)
                     .map(toCliente)
                     .orElse(Cliente.builder().build());
+
+            asaasClient.atualizarCliente(c.getIdAsaas(), getDTO(nome, id, cpf));
+
+            return c;
         }
 
         try {

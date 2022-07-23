@@ -18,6 +18,10 @@ public interface AsaasClient {
     @Headers("Content-Type: application/json")
     AsaasCliente novoCliente(@RequestBody ClienteDTO cliente);
 
+    @PostMapping("customers/{id}")
+    AsaasCliente atualizarCliente(@PathVariable("id") String id,
+            @RequestBody ClienteDTO cliente);
+
     @PostMapping("subscriptions")
     @Headers("Content-Type: application/json")
     AsaasAssinatura novaAssinatura(@RequestBody AssinaturaDTO assinatura);
