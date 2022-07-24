@@ -12,4 +12,5 @@ public class Cliente {
     String idAsaas;
     LocalDateTime criadoEm;
     boolean ativo;
+    String cpf;
 }

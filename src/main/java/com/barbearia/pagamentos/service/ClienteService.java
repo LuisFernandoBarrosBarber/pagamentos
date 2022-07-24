@@ -19,7 +19,6 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import static java.time.LocalDateTime.now;
-import static javax.transaction.Transactional.TxType.REQUIRES_NEW;
 
 @Service
 @RequiredArgsConstructor
@@ -34,38 +33,74 @@ public class ClienteService {
 
     @Transactional
     public Cliente novo(String nome, Long id, String cpf) {
-        test(id);
-        ClienteEntity c = salvamentoInicial(id);
+
+        if (alreadyCadastrado(id)) {
+            Cliente c = repo.findById(id)
+                    .map(toCliente)
+                    .orElse(Cliente.builder().build());
+
+            asaasClient.atualizarCliente(c.getIdAsaas(), getDTO(nome, id, cpf));
+
+            return c;
+        }
+
         try {
-            AsaasCliente asaasCliente = asaasClient.novoCliente(getDTO(nome, id, cpf));
-            c.setIdAsaas(asaasCliente.getId());
+            AsaasCliente c = asaasClient.novoCliente(getDTO(nome, id, cpf));
+            ClienteEntity entity = save(id, c.getId());
+            return toCliente.apply(entity);
         } catch (Exception e) {
             log.error("ERRO AO SALVAR CLIENTE. CLIENTE ID: " + id, e);
             throw e;
         }
-        return toCliente.apply(c);
+    }
+
+    @Transactional
+    public Assinatura updateAssinatura(Long id, float value) {
+        testClienteExists(id);
+        Assinatura a = assinaturaService.getByCliente(id);
+        return assinaturaService.updateAssinatura(a.getIdAsaas(), value);
+    }
+
+    @Transactional
+    public Assinatura cancelarAssinatura(Long id) {
+        testClienteExists(id);
+        Assinatura a = assinaturaService.getByCliente(id);
+        return assinaturaService.cancelarAssinatura(a.getIdAsaas());
+    }
+
+    public Assinatura getAssinatura(Long id) {
+        testClienteExists(id);
+        return assinaturaService.getByCliente(id);
     }
 
     public List<Cobranca> getCobrancasByCliente(Long id) {
-        if (repo.findByIdAndAtivoIsTrue(id).isEmpty()) {
-            throw new ResourceNotFoundException("Cliente não encontrado ou inativado.");
-        }
+        testClienteExists(id);
         Assinatura a = assinaturaService.getByCliente(id);
         return cobrancaService.getByAssinatura(a.getIdAsaas());
     }
 
-    @Transactional(REQUIRES_NEW)
-    public ClienteEntity salvamentoInicial(Long id) {
+    public Cobranca getLastCobrancaPaga(Long id) {
+        testClienteExists(id);
+        Assinatura a = assinaturaService.getByCliente(id);
+        return cobrancaService.getLastCobrancaPagaByAssinatura(a.getIdAsaas());
+    }
+
+    public ClienteEntity save(Long id, String idAssas) {
         ClienteEntity c = new ClienteEntity();
         c.setAtivo(true);
         c.setCriadoEm(now());
         c.setId(id);
+        c.setIdAsaas(idAssas);
         return repo.save(c);
     }
 
-    private void test(Long id) {
-        if (repo.countAllByIdAndAtivoIsTrueAndIdAsaasNotNull(id) > 0) {
-            throw new RuntimeException("Cliente já cadastrado");
+    private boolean alreadyCadastrado(Long id) {
+        return repo.countAllByIdAndAtivoIsTrueAndIdAsaasNotNull(id) > 0;
+    }
+
+    private void testClienteExists(Long id) {
+        if (repo.findByIdAndAtivoIsTrue(id).isEmpty()) {
+            throw new ResourceNotFoundException("Cliente não encontrado ou inativado.");
         }
     }
 

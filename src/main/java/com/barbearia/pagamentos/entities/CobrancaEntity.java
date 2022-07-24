@@ -45,6 +45,9 @@ public class CobrancaEntity {
     @Column
     private LocalDateTime pagamentoEm;
 
+    @Column
+    private LocalDateTime lastUpdate;
+
     @Column(nullable = false)
     private BillingTypeEnum tipoPagamento;
 

@@ -1,12 +1,11 @@
 package com.barbearia.pagamentos.controller;
 
+import com.barbearia.pagamentos.model.Assinatura;
+import com.barbearia.pagamentos.model.Cliente;
 import com.barbearia.pagamentos.model.Cobranca;
 import com.barbearia.pagamentos.service.ClienteService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,4 +20,32 @@ public class ClienteController {
     public List<Cobranca> getCobrancas(@PathVariable("id") Long id) {
         return service.getCobrancasByCliente(id);
     }
+
+    @GetMapping("{id}/last-cobranca-paga")
+    public Cobranca getLastCobrancaPaga(@PathVariable("id") Long id) {
+        return service.getLastCobrancaPaga(id);
+    }
+
+    @PostMapping("{id}/update-assinatura")
+    public Assinatura updateAssinatura(@PathVariable("id") Long id,
+            @RequestParam("value") float value) {
+        return service.updateAssinatura(id, value);
+    }
+
+    @PostMapping
+    public Cliente novo(@RequestParam("id") Long id, @RequestParam("nome") String nome,
+            @RequestParam("cpf") String cpf) {
+        return service.novo(nome, id, cpf);
+    }
+
+    @DeleteMapping("{id}/cancelar-assinatura")
+    public Assinatura cancelarAssinatura(@PathVariable("id") Long id) {
+        return service.cancelarAssinatura(id);
+    }
+
+    @GetMapping("{id}/assinatura")
+    public Assinatura getAssinatura(@PathVariable("id") Long id) {
+        return service.getAssinatura(id);
+    }
+
 }

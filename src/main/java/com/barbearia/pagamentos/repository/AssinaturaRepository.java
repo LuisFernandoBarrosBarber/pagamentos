@@ -10,4 +10,6 @@ public interface AssinaturaRepository extends JpaRepository<AssinaturaEntity, As
     int countAllByAtivoIsTrueAndIdCliente(Long idCliente);
 
     Optional<AssinaturaEntity> getByIdClienteAndAtivoIsTrue(Long idCliente);
+
+    Optional<AssinaturaEntity> findByAtivoIsTrueAndIdAssinatura(String idAssinatura);
 }
