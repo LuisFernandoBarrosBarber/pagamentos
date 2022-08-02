@@ -9,7 +9,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 @FeignClient(
-        url = "https://sandbox.asaas.com/api/v3",
+        //url = "https://sandbox.asaas.com/api/v3",
+        url = "${asaas.url}",
         name = "asaas",
         configuration = OAuthFeignConfig.class)
 public interface AsaasClient {
