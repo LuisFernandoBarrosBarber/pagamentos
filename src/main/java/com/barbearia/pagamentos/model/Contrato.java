@@ -1,5 +1,6 @@
 package com.barbearia.pagamentos.model;
 
+import com.barbearia.pagamentos.dto.asaas.enumerator.BillingTypeEnum;
 import com.barbearia.pagamentos.dto.asaas.enumerator.CycleEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,4 +26,6 @@ public class Contrato {
     String clienteIdAsaas;
     @Null
     String assinaturaIdAsaas;
+    @NotNull(message = "Forma de Pagamento é obrigatório")
+    BillingTypeEnum formaPagamento;
 }

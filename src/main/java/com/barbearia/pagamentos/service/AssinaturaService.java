@@ -57,7 +57,7 @@ public class AssinaturaService {
         try {
             assinatura = asaasClient.novaAssinatura(getDTO(co));
             salvaCobrancas(assinatura);
-            save(assinatura, co.getId());
+            save(assinatura, co);
         } catch (Exception e) {
             log.error("ERRO AO GERAR ASSINATURA/COBRANCA DO CLIENTE " + co.getId(), e);
             throw e;
@@ -100,7 +100,7 @@ public class AssinaturaService {
 
     private static AssinaturaDTO getDTO(Contrato co) {
         return AssinaturaDTO.builder()
-                .billingType(UNDEFINED)
+                .billingType(co.getFormaPagamento())
                 .value(co.getValor())
                 .customer(co.getClienteIdAsaas())
                 .cycle(co.getCiclo())
@@ -126,12 +126,13 @@ public class AssinaturaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Assinatura não encontrada ou finalizada."));
     }
 
-    private void save(AsaasAssinatura a, Long clienteId) {
+    private void save(AsaasAssinatura a, Contrato c) {
         AssinaturaEntity entity = new AssinaturaEntity();
         entity.setIdAssinatura(a.getId());
-        entity.setIdCliente(clienteId);
+        entity.setIdCliente(c.getId());
         entity.setAtivo(true);
         entity.setCriadoEm(now());
+        entity.setFormaPagamento(c.getFormaPagamento());
         repo.save(entity);
     }
 
