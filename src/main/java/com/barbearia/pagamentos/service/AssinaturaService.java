@@ -3,6 +3,7 @@ package com.barbearia.pagamentos.service;
 import com.barbearia.pagamentos.client.AsaasClient;
 import com.barbearia.pagamentos.configuration.excetion.ResourceNotFoundException;
 import com.barbearia.pagamentos.dto.asaas.AssinaturaDTO;
+import com.barbearia.pagamentos.dto.asaas.enumerator.BillingTypeEnum;
 import com.barbearia.pagamentos.entities.AssinaturaEntity;
 import com.barbearia.pagamentos.model.Assinatura;
 import com.barbearia.pagamentos.model.Contrato;
@@ -75,9 +76,10 @@ public class AssinaturaService {
     }
 
     @Transactional
-    public Assinatura updateAssinatura(String id, Float value) {
+    public Assinatura updateAssinatura(String id, Float value, BillingTypeEnum fp) {
         AssinaturaDTO a = AssinaturaDTO.builder()
                 .value(value)
+                .billingType(fp)
                 .build();
         return Assinatura.builder()
                 .idAsaas(asaasClient.updateAssinatura(id, a).getId())
@@ -117,6 +119,7 @@ public class AssinaturaService {
 
         return Assinatura.builder()
                 .idAsaas(a.getIdAssinatura())
+                .formaPagamento(a.getFormaPagamento())
                 .build();
     }
 

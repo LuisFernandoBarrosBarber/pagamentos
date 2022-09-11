@@ -4,6 +4,7 @@ import com.barbearia.pagamentos.client.AsaasClient;
 import com.barbearia.pagamentos.configuration.excetion.ResourceNotFoundException;
 import com.barbearia.pagamentos.converter.ClienteEntityToCliente;
 import com.barbearia.pagamentos.dto.asaas.ClienteDTO;
+import com.barbearia.pagamentos.dto.asaas.enumerator.BillingTypeEnum;
 import com.barbearia.pagamentos.entities.ClienteEntity;
 import com.barbearia.pagamentos.model.Assinatura;
 import com.barbearia.pagamentos.model.Cliente;
@@ -55,10 +56,10 @@ public class ClienteService {
     }
 
     @Transactional
-    public Assinatura updateAssinatura(Long id, float value) {
+    public Assinatura updateAssinatura(Long id, float value, BillingTypeEnum fp) {
         testClienteExists(id);
         Assinatura a = assinaturaService.getByCliente(id);
-        return assinaturaService.updateAssinatura(a.getIdAsaas(), value);
+        return assinaturaService.updateAssinatura(a.getIdAsaas(), value, fp);
     }
 
     @Transactional
