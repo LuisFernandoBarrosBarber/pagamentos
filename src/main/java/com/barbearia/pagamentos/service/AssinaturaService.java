@@ -32,24 +32,6 @@ public class AssinaturaService {
     private final AsaasClient asaasClient;
     private final CobrancaService cobrancaService;
 
-   /* @Transactional
-    public Assinatura assinar(Cliente c, Contrato co) {
-
-        check(c);
-        AsaasAssinatura assinatura;
-        try {
-            assinatura = asaasClient.novaAssinatura(getDTO(c, co));
-            salvaCobrancas(assinatura);
-            save(assinatura, c);
-        } catch (Exception e) {
-            log.error("ERRO AO GERAR ASSINATURA/COBRANCA DO CLIENTE " + c.getId(), e);
-            throw e;
-        }
-
-        return Assinatura.builder().idAsaas(assinatura.getId()).build();
-
-    }*/
-
     @Transactional
     public Assinatura assinar(Contrato co) {
 
@@ -77,13 +59,21 @@ public class AssinaturaService {
 
     @Transactional
     public Assinatura updateAssinatura(String id, Float value, BillingTypeEnum fp) {
-        AssinaturaDTO a = AssinaturaDTO.builder()
+
+        AssinaturaEntity e = getEntityById(id);
+
+        AssinaturaDTO aDTO = AssinaturaDTO.builder()
                 .value(value)
                 .billingType(fp)
                 .build();
-        return Assinatura.builder()
-                .idAsaas(asaasClient.updateAssinatura(id, a).getId())
+
+        Assinatura aa = Assinatura.builder()
+                .idAsaas(asaasClient.updateAssinatura(id, aDTO).getId())
                 .build();
+
+        e.setFormaPagamento(fp);
+        cobrancaService.updateByAssinaturaId(id, fp);
+        return aa;
     }
 
     @Transactional
@@ -107,7 +97,7 @@ public class AssinaturaService {
                 .customer(co.getClienteIdAsaas())
                 .cycle(co.getCiclo())
                 .description("Assinatura do plano Barbeiro Agenda.")
-                .nextDueDate(LocalDate.now().plusDays(30))
+                .nextDueDate(LocalDate.now())
                 .build();
     }
 
