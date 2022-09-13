@@ -1,10 +1,14 @@
 package com.barbearia.pagamentos.service;
 
+import com.barbearia.pagamentos.client.AsaasClient;
+import com.barbearia.pagamentos.dto.asaas.CobrancaDTO;
+import com.barbearia.pagamentos.dto.asaas.enumerator.BillingTypeEnum;
 import com.barbearia.pagamentos.entities.CobrancaEntity;
 import com.barbearia.pagamentos.model.Cobranca;
 import com.barbearia.pagamentos.model.asaas.AsaasCobrancaData;
 import com.barbearia.pagamentos.repository.CobrancaRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,18 +16,37 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import static com.barbearia.pagamentos.dto.asaas.enumerator.StatusCobranca.PENDING;
 import static com.barbearia.pagamentos.dto.asaas.enumerator.StatusCobranca.RECEIVED;
 import static java.time.LocalDateTime.now;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CobrancaService {
 
     private final CobrancaRepository repo;
+    private final AsaasClient client;
 
     @Transactional
     public void nova(AsaasCobrancaData c) {
         repo.save(getEntity(c));
+    }
+
+    @Transactional
+    public void updateByAssinaturaId(String aId, BillingTypeEnum fp) {
+        repo.getByIdAssinaturaAndAtivoIsTrueAndStatus(aId, PENDING)
+                .forEach(it -> {
+                    CobrancaDTO cDTO = CobrancaDTO.builder().billingType(fp).build();
+                    try {
+                        client.updateCobranca(it.getIdCobranca(), cDTO);
+                        it.setTipoPagamento(fp);
+                        repo.save(it);
+                    } catch (Exception e) {
+                        log.info("ERRO AO ALTERAR COBRANCA. ", e);
+                    }
+                });
+
     }
 
     @Transactional

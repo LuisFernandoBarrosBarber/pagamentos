@@ -49,6 +49,7 @@ public class CobrancaEntity {
     private LocalDateTime lastUpdate;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private BillingTypeEnum tipoPagamento;
 
     @Column(nullable = false)

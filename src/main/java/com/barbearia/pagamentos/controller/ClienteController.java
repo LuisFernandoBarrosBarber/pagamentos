@@ -1,5 +1,6 @@
 package com.barbearia.pagamentos.controller;
 
+import com.barbearia.pagamentos.dto.asaas.enumerator.BillingTypeEnum;
 import com.barbearia.pagamentos.model.Assinatura;
 import com.barbearia.pagamentos.model.Cliente;
 import com.barbearia.pagamentos.model.Cobranca;
@@ -28,13 +29,14 @@ public class ClienteController {
 
     @PostMapping("{id}/update-assinatura")
     public Assinatura updateAssinatura(@PathVariable("id") Long id,
-            @RequestParam("value") float value) {
-        return service.updateAssinatura(id, value);
+                                       @RequestParam("value") float value,
+                                       @RequestParam("forma-pagamento") BillingTypeEnum fp) {
+        return service.updateAssinatura(id, value, fp);
     }
 
     @PostMapping
     public Cliente novo(@RequestParam("id") Long id, @RequestParam("nome") String nome,
-            @RequestParam("cpf") String cpf) {
+                        @RequestParam("cpf") String cpf) {
         return service.novo(nome, id, cpf);
     }
 
