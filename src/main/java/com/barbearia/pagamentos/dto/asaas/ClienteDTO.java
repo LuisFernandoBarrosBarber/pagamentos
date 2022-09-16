@@ -9,4 +9,5 @@ public class ClienteDTO {
     String name;
     String externalReference;
     String cpfCnpj;
+    String company;
 }

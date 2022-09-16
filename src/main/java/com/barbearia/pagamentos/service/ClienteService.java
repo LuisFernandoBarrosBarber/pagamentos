@@ -33,20 +33,20 @@ public class ClienteService {
     private final AssinaturaService assinaturaService;
 
     @Transactional
-    public Cliente novo(String nome, Long id, String cpf) {
+    public Cliente novo(String nome, Long id, String cpf, String barbeariaNome) {
 
         if (alreadyCadastrado(id)) {
             Cliente c = repo.findById(id)
                     .map(toCliente)
                     .orElse(Cliente.builder().build());
 
-            asaasClient.atualizarCliente(c.getIdAsaas(), getDTO(nome, id, cpf));
+            asaasClient.atualizarCliente(c.getIdAsaas(), getDTO(nome, id, cpf, barbeariaNome));
 
             return c;
         }
 
         try {
-            AsaasCliente c = asaasClient.novoCliente(getDTO(nome, id, cpf));
+            AsaasCliente c = asaasClient.novoCliente(getDTO(nome, id, cpf, barbeariaNome));
             ClienteEntity entity = save(id, c.getId());
             return toCliente.apply(entity);
         } catch (Exception e) {
@@ -105,11 +105,12 @@ public class ClienteService {
         }
     }
 
-    private static ClienteDTO getDTO(String nome, Long id, String cpf) {
+    private static ClienteDTO getDTO(String nome, Long id, String cpf, String barbeariaNome) {
         return ClienteDTO.builder()
                 .name(nome)
                 .externalReference(id.toString())
                 .cpfCnpj(cpf)
+                .company(barbeariaNome)
                 .build();
     }
 }
