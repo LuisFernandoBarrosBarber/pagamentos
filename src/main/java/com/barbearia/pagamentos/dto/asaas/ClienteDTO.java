@@ -10,4 +10,5 @@ public class ClienteDTO {
     String externalReference;
     String cpfCnpj;
     String company;
+    boolean notificationDisabled;
 }

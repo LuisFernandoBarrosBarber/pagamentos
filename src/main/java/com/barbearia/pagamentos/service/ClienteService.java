@@ -111,6 +111,7 @@ public class ClienteService {
                 .externalReference(id.toString())
                 .cpfCnpj(cpf)
                 .company(barbeariaNome)
+                .notificationDisabled(true)
                 .build();
     }
 }
