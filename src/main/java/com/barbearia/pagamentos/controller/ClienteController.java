@@ -36,8 +36,9 @@ public class ClienteController {
 
     @PostMapping
     public Cliente novo(@RequestParam("id") Long id, @RequestParam("nome") String nome,
-                        @RequestParam("cpf") String cpf) {
-        return service.novo(nome, id, cpf);
+                        @RequestParam("cpf") String cpf,
+                        @RequestParam("barbearia-nome") String barbeariaNome) {
+        return service.novo(nome, id, cpf, barbeariaNome);
     }
 
     @DeleteMapping("{id}/cancelar-assinatura")

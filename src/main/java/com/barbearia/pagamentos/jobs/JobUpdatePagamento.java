@@ -12,11 +12,13 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import static com.barbearia.pagamentos.dto.asaas.enumerator.StatusCobranca.OVERDUE;
 import static com.barbearia.pagamentos.dto.asaas.enumerator.StatusCobranca.PENDING;
 import static java.time.LocalDateTime.now;
 
@@ -35,14 +37,14 @@ public class JobUpdatePagamento {
     @Transactional
     public void refreshCobrancas() {
         List<CobrancaEntity> cobrancas =
-                repository.findByStatusAndAtivoIsTrue(PENDING).collect(Collectors.toList());
+                repository.findByStatusInAndAtivoIsTrue(Arrays.asList(PENDING, OVERDUE)).toList();
         log.info("ENCONTRADAS " + cobrancas.size() + " COBRANCAS PENDENTES PARA PROCESSAR.");
         cobrancas.forEach(this::updateStatus);
     }
 
     private void updateStatus(CobrancaEntity e) {
         try {
-            Thread.sleep(2000L);
+            Thread.sleep(1000L);
             AsaasCobrancaData c = asaasClient.getCobranca(e.getIdCobranca());
             e.setStatus(c.getStatus());
             e.setPagamentoEm(getDataPagamento(c));
