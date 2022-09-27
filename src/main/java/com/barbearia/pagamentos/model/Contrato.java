@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -22,6 +23,8 @@ public class Contrato {
     float valor;
     @NotNull(message = "Ciclo de renovação é obrigatório")
     CycleEnum ciclo;
+    @NotNull(message = "Data da primeira fatura é obrigatório")
+    LocalDate dtFirstFatura;
     @Null
     String clienteIdAsaas;
     @Null
