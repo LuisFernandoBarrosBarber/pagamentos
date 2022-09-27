@@ -97,7 +97,7 @@ public class AssinaturaService {
                 .customer(co.getClienteIdAsaas())
                 .cycle(co.getCiclo())
                 .description("Assinatura do plano Barbeiro Agenda.")
-                .nextDueDate(LocalDate.now())
+                .nextDueDate(co.getDtFirstFatura())
                 .build();
     }
 
