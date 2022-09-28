@@ -18,8 +18,7 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
-import static com.barbearia.pagamentos.dto.asaas.enumerator.StatusCobranca.OVERDUE;
-import static com.barbearia.pagamentos.dto.asaas.enumerator.StatusCobranca.PENDING;
+import static com.barbearia.pagamentos.dto.asaas.enumerator.StatusCobranca.*;
 import static java.time.LocalDateTime.now;
 
 @EnableScheduling
@@ -37,7 +36,7 @@ public class JobUpdatePagamento {
     @Transactional
     public void refreshCobrancas() {
         List<CobrancaEntity> cobrancas =
-                repository.findByStatusInAndAtivoIsTrue(Arrays.asList(PENDING, OVERDUE)).toList();
+                repository.findByStatusInAndAtivoIsTrue(Arrays.asList(PENDING, OVERDUE, CONFIRMED)).toList();
         log.info("ENCONTRADAS " + cobrancas.size() + " COBRANCAS PENDENTES PARA PROCESSAR.");
         cobrancas.forEach(this::updateStatus);
     }
@@ -48,6 +47,7 @@ public class JobUpdatePagamento {
             AsaasCobrancaData c = asaasClient.getCobranca(e.getIdCobranca());
             e.setStatus(c.getStatus());
             e.setPagamentoEm(getDataPagamento(c));
+            e.setTipoPagamento(c.getBillingType());
         } catch (Exception ex) {
             log.error("ERRO AO TENTAR ATUALIZAR COBRANCA ID: " + e.getIdCobranca(), ex);
         }
