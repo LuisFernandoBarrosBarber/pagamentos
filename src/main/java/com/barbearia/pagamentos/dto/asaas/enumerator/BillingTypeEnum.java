@@ -4,5 +4,6 @@ public enum BillingTypeEnum {
     BOLETO,
     CREDIT_CARD,
     PIX,
-    UNDEFINED
+    UNDEFINED,
+    DEBIT_CARD
 }
