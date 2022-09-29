@@ -19,4 +19,6 @@ public interface CobrancaRepository extends JpaRepository<CobrancaEntity, Long> 
     Optional<CobrancaEntity> findFirstByAtivoIsTrueAndIdAssinaturaAndStatusOrderByVencimentoEm(String idAssinatura,
             StatusCobranca status);
 
+    Optional<CobrancaEntity> findByIdCobranca(String idCobranca);
+
 }
