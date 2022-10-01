@@ -21,9 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JobSearchCobrancas {
 
-    //private static final String A_CADA_HORA = "59 59 */1 * * *";
-
-    private static final String A_CADA_HORA = "59 */1 * * * *";
+    private static final String A_CADA_HORA = "59 59 */1 * * *";
     private final CobrancaRepository cRepo;
     private final AssinaturaRepository aRepo;
     private final AssinaturaService aService;
@@ -34,7 +32,6 @@ public class JobSearchCobrancas {
     public void refreshCobrancasInAssinaturas() {
         List<AssinaturaEntity> assinaturas =
                 aRepo.findAllByAtivoIsTrue()
-                        .filter(it -> it.getIdCliente() == 1L) // ISSO AQUI E APENAS PARA TESTAR A ROTINA, REMOVER DEPOIS
                         .toList();
 
         log.info("ENCONTRADAS " + assinaturas.size() + " ASSINATURAS ATIVAS PARA ATUALIZAR.");
