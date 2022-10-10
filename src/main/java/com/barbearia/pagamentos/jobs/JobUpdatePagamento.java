@@ -48,6 +48,7 @@ public class JobUpdatePagamento {
             e.setStatus(c.getStatus());
             e.setPagamentoEm(getDataPagamento(c));
             e.setTipoPagamento(c.getBillingType());
+            e.setAtivo(!c.isDeleted());
         } catch (Exception ex) {
             log.error("ERRO AO TENTAR ATUALIZAR COBRANCA ID: " + e.getIdCobranca(), ex);
         }

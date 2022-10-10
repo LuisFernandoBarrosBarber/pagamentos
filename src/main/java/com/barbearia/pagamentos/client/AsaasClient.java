@@ -45,4 +45,7 @@ public interface AsaasClient {
 
     @DeleteMapping("subscriptions/{id}/")
     AsaasAssinaturaCancelada cancelarAssinatura(@PathVariable("id") String id);
+
+    @GetMapping("subscriptions/{id}")
+    AsaasAssinatura getAssinatura(@PathVariable("id") String id);
 }

@@ -7,4 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AsaasAssinatura {
     String id;
+    boolean deleted;
 }
