@@ -6,6 +6,7 @@ import com.barbearia.pagamentos.repository.AssinaturaRepository;
 import com.barbearia.pagamentos.repository.CobrancaRepository;
 import com.barbearia.pagamentos.service.AssinaturaService;
 import com.barbearia.pagamentos.service.CobrancaService;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -50,6 +51,8 @@ public class JobSearchCobrancas {
                     .forEach(cService::nova);
 
 
+        } catch (FeignException.NotFound ignored) {
+            log.info("ASSINATURA NÃO ENCONTRADO NO ASAAS: " + e.getIdAssinatura());
         } catch (Exception ex) {
             log.error("ERRO AO TENTAR ATUALIZAR ASSINATURA ID: " + e.getIdAssinatura(), ex);
         }

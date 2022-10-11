@@ -24,6 +24,9 @@ public interface AsaasClient {
     AsaasCliente atualizarCliente(@PathVariable("id") String id,
                                   @RequestBody ClienteDTO cliente);
 
+    @GetMapping("customers/{id}")
+    AsaasCliente getCliente(@PathVariable("id") String id);
+
     @PostMapping("subscriptions")
     @Headers("Content-Type: application/json")
     AsaasAssinatura novaAssinatura(@RequestBody AssinaturaDTO assinatura);

@@ -7,6 +7,7 @@ import com.barbearia.pagamentos.model.asaas.AsaasAssinatura;
 import com.barbearia.pagamentos.model.asaas.AsaasCobrancaData;
 import com.barbearia.pagamentos.repository.AssinaturaRepository;
 import com.barbearia.pagamentos.repository.CobrancaRepository;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -29,8 +30,7 @@ import static java.time.LocalDateTime.now;
 @RequiredArgsConstructor
 public class JobUpdateAssinatura {
 
-    private static final String A_CADA_MEIA_HORA = "59 */1 * * * *";
-
+    private static final String A_CADA_MEIA_HORA = "59 */30 * * * *";
     private final AssinaturaRepository repository;
     private final AsaasClient asaasClient;
 
@@ -49,6 +49,8 @@ public class JobUpdateAssinatura {
                 log.info("INATIVANDO ASSINATURA DE ID: " + a.getIdAssinatura());
                 a.setAtivo(!aa.isDeleted());
             }
+        } catch (FeignException.NotFound ignored) {
+            log.info("ASSINATURA NÃO ENCONTRADO NO ASAAS: " + a.getIdAssinatura());
         } catch (Exception ex) {
             log.error("ERRO AO CONSULTAR ASSINATURA ID: " + a.getIdAssinatura(), ex);
         }
