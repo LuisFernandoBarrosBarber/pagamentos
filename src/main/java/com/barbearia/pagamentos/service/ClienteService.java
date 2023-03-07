@@ -62,13 +62,6 @@ public class ClienteService {
         return assinaturaService.updateAssinatura(a.getIdAsaas(), value, fp);
     }
 
-    @Transactional
-    public Assinatura cancelarAssinatura(Long id) {
-        testClienteExists(id);
-        Assinatura a = assinaturaService.getByCliente(id);
-        return assinaturaService.cancelarAssinatura(a.getIdAsaas());
-    }
-
     public Assinatura getAssinatura(Long id) {
         testClienteExists(id);
         return assinaturaService.getByCliente(id);

@@ -21,4 +21,5 @@ public class AsaasCobrancaData {
     LocalDate dueDate;
     LocalDate paymentDate;
     String invoiceUrl;
+    boolean deleted;
 }

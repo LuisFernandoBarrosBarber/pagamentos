@@ -76,16 +76,6 @@ public class AssinaturaService {
         return aa;
     }
 
-    @Transactional
-    public Assinatura cancelarAssinatura(String id) {
-        AssinaturaEntity e = getEntityById(id);
-        e.setAtivo(false);
-
-        return Assinatura.builder()
-                .idAsaas(asaasClient.cancelarAssinatura(id).getId())
-                .build();
-    }
-
     public AsaasCobrancas getCobrancasByAssinatura(String assinaturaId) {
         return asaasClient.getCobrancas(assinaturaId);
     }

@@ -4,6 +4,7 @@ import com.barbearia.pagamentos.client.AsaasClient;
 import com.barbearia.pagamentos.entities.CobrancaEntity;
 import com.barbearia.pagamentos.model.asaas.AsaasCobrancaData;
 import com.barbearia.pagamentos.repository.CobrancaRepository;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -48,6 +49,9 @@ public class JobUpdatePagamento {
             e.setStatus(c.getStatus());
             e.setPagamentoEm(getDataPagamento(c));
             e.setTipoPagamento(c.getBillingType());
+            e.setAtivo(!c.isDeleted());
+        } catch (FeignException.NotFound ignored) {
+            log.info("COBRANCA NÃO ENCONTRADO NO ASAAS: " + e.getIdAssinatura());
         } catch (Exception ex) {
             log.error("ERRO AO TENTAR ATUALIZAR COBRANCA ID: " + e.getIdCobranca(), ex);
         }
