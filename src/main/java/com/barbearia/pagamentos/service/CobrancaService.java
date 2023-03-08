@@ -11,13 +11,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
-import static com.barbearia.pagamentos.dto.asaas.enumerator.StatusCobranca.PENDING;
-import static com.barbearia.pagamentos.dto.asaas.enumerator.StatusCobranca.RECEIVED;
+import static com.barbearia.pagamentos.dto.asaas.enumerator.StatusCobranca.*;
+import static com.barbearia.pagamentos.dto.asaas.enumerator.StatusCobranca.CONFIRMED;
 import static java.time.LocalDateTime.now;
 
 @Service
@@ -34,13 +35,17 @@ public class CobrancaService {
     }
 
     @Transactional
-    public void updateByAssinaturaId(String aId, BillingTypeEnum fp) {
-        repo.getByIdAssinaturaAndAtivoIsTrueAndStatus(aId, PENDING)
+    public void updateByAssinaturaId(String aId, BillingTypeEnum fp, float value) {
+        repo.getByIdAssinaturaAndAtivoIsTrueAndStatusIn(aId, Arrays.asList(PENDING, OVERDUE))
                 .forEach(it -> {
-                    CobrancaDTO cDTO = CobrancaDTO.builder().billingType(fp).build();
+                    CobrancaDTO cDTO = CobrancaDTO.builder()
+                            .billingType(fp)
+                            .value(value)
+                            .build();
                     try {
                         client.updateCobranca(it.getIdCobranca(), cDTO);
                         it.setTipoPagamento(fp);
+                        it.setValor(value);
                         repo.save(it);
                     } catch (Exception e) {
                         log.info("ERRO AO ALTERAR COBRANCA. ", e);

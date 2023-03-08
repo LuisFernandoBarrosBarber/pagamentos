@@ -72,7 +72,7 @@ public class AssinaturaService {
                 .build();
 
         e.setFormaPagamento(fp);
-        cobrancaService.updateByAssinaturaId(id, fp);
+        cobrancaService.updateByAssinaturaId(id, fp, value);
         return aa;
     }
 
