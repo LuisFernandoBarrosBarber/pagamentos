@@ -14,12 +14,6 @@ public class AssinaturaController {
 
     private final AssinaturaService service;
 
-    // COMENTEI PQ ACHO QUE NAO É USADO (29/09/2022)
-//    @GetMapping("{id}/cobrancas")
-//    public AsaasCobrancas getCobrancas(@PathVariable("id") String idAssinatura) {
-//        return service.getCobrancasByAssinatura(idAssinatura);
-//    }
-
     @PostMapping
     public Assinatura nova(@RequestBody Contrato co) {
         return service.assinar(co);
