@@ -1,0 +1,29 @@
+package com.barbearia.pagamentos.dto.asaas.enumerator;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+public enum EventoCobranca {
+    PAYMENT_CREATED,
+    PAYMENT_AWAITING_RISK_ANALYSIS,
+    PAYMENT_APPROVED_BY_RISK_ANALYSIS,
+    PAYMENT_REPROVED_BY_RISK_ANALYSIS,
+    PAYMENT_UPDATED,
+    PAYMENT_CONFIRMED,
+    PAYMENT_RECEIVED,
+    PAYMENT_ANTICIPATED,
+    PAYMENT_OVERDUE,
+    PAYMENT_DELETED,
+    PAYMENT_RESTORED,
+    PAYMENT_REFUNDED,
+    PAYMENT_REFUND_IN_PROGRESS,
+    PAYMENT_RECEIVED_IN_CASH_UNDONE,
+    PAYMENT_CHARGEBACK_REQUESTED,
+    PAYMENT_CHARGEBACK_DISPUTE,
+    PAYMENT_AWAITING_CHARGEBACK_REVERSAL,
+    PAYMENT_DUNNING_RECEIVED,
+    PAYMENT_DUNNING_REQUESTED,
+    PAYMENT_BANK_SLIP_VIEWED,
+    PAYMENT_CHECKOUT_VIEWED,
+}
