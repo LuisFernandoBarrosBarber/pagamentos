@@ -1,6 +1,8 @@
 package com.barbearia.pagamentos.service;
 
 import com.barbearia.pagamentos.client.AsaasClient;
+import com.barbearia.pagamentos.converter.AsaasCobrancaDataToCobrancaEntity;
+import com.barbearia.pagamentos.converter.CobrancaEntityToCobranca;
 import com.barbearia.pagamentos.dto.asaas.CobrancaDTO;
 import com.barbearia.pagamentos.dto.asaas.enumerator.BillingTypeEnum;
 import com.barbearia.pagamentos.entities.CobrancaEntity;
@@ -11,14 +13,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
 import static com.barbearia.pagamentos.dto.asaas.enumerator.StatusCobranca.*;
-import static com.barbearia.pagamentos.dto.asaas.enumerator.StatusCobranca.CONFIRMED;
 import static java.time.LocalDateTime.now;
 
 @Service
@@ -28,10 +31,12 @@ public class CobrancaService {
 
     private final CobrancaRepository repo;
     private final AsaasClient client;
+    private final AsaasCobrancaDataToCobrancaEntity asaasToEntity;
+    private final CobrancaEntityToCobranca toCobranca;
 
     @Transactional
     public void nova(AsaasCobrancaData c) {
-        repo.save(getEntity(c));
+        repo.save(asaasToEntity.apply(c));
     }
 
     @Transactional
@@ -55,48 +60,44 @@ public class CobrancaService {
     }
 
     @Transactional
+    public void update(Cobranca c, AsaasCobrancaData ca) {
+        repo.findById(c.id)
+                .ifPresent(ce -> {
+                    ce.setStatus(ca.getStatus());
+                    ce.setPagamentoEm(getDataPagamento(ca));
+                    ce.setTipoPagamento(ca.getBillingType());
+                    ce.setAtivo(!ca.isDeleted());
+                    ce.setLastUpdate(now());
+                });
+    }
+
+    @Transactional
     public List<Cobranca> getByAssinatura(String assinaturaId) {
 
         return repo.getByIdAssinaturaAndAtivoIsTrue(assinaturaId)
-                .map(this::toCobranca)
+                .map(toCobranca)
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public Cobranca getLastCobrancaPagaByAssinatura(String idAsaas) {
         return repo.findFirstByAtivoIsTrueAndIdAssinaturaAndStatusOrderByVencimentoEm(idAsaas, RECEIVED)
-                .map(this::toCobranca)
+                .map(toCobranca)
                 .orElse(Cobranca.builder().build());
 
     }
 
-    private CobrancaEntity getEntity(AsaasCobrancaData ca) {
-        CobrancaEntity c = new CobrancaEntity();
-        c.setIdCobranca(ca.getId());
-        c.setAtivo(true);
-        c.setCriadoEm(now());
-        c.setIdAssinatura(ca.getSubscription());
-        c.setVencimentoEm(ca.getDueDate());
-        c.setStatus(ca.getStatus());
-        c.setInvoiceUrl(ca.getInvoiceUrl());
-        c.setValor(ca.getValue());
-        c.setTipoPagamento(ca.getBillingType());
-        return c;
+
+    @Transactional
+    public Optional<Cobranca> findByIdAsaas(String id) {
+        return repo.findByIdCobranca(id)
+                .stream().map(toCobranca)
+                .findFirst();
     }
 
-    private Cobranca toCobranca(CobrancaEntity c) {
-        return Cobranca.builder()
-                .id(c.getId())
-                .idCobranca(c.getIdCobranca())
-                .idAssinatura(c.getIdAssinatura())
-                .ativo(c.isAtivo())
-                .criadoEm(c.getCriadoEm())
-                .pagamentoEm(c.getPagamentoEm())
-                .status(c.getStatus())
-                .vencimentoEm(c.getVencimentoEm())
-                .valor(c.getValor())
-                .invoiceUrl(c.getInvoiceUrl())
-                .tipoPagamento(c.getTipoPagamento())
-                .build();
+    private LocalDateTime getDataPagamento(AsaasCobrancaData c) {
+        return c.getPaymentDate() != null ?
+                c.getPaymentDate().atTime(LocalTime.from(now())) :
+                null;
     }
 }
