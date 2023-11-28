@@ -88,6 +88,16 @@ public class ClienteService {
         return repo.save(c);
     }
 
+    public Cliente getById(Long id){
+        return repo.findById(id)
+                .map(toCliente)
+                .orElse(null);
+    }
+
+    public void inativar(Long id){
+        repo.findById(id).ifPresent(it-> it.setAtivo(false));
+    }
+
     private boolean alreadyCadastrado(Long id) {
         return repo.countAllByIdAndAtivoIsTrueAndIdAsaasNotNull(id) > 0;
     }

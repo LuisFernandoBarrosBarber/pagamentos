@@ -2,6 +2,7 @@ package com.barbearia.pagamentos.dto.asaas;
 
 import com.barbearia.pagamentos.dto.asaas.enumerator.BillingTypeEnum;
 import com.barbearia.pagamentos.dto.asaas.enumerator.CycleEnum;
+import com.barbearia.pagamentos.dto.asaas.enumerator.StatusAssinatura;
 import lombok.Builder;
 import lombok.Data;
 

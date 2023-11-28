@@ -4,6 +4,7 @@ import com.barbearia.pagamentos.client.AsaasClient;
 import com.barbearia.pagamentos.configuration.excetion.ResourceNotFoundException;
 import com.barbearia.pagamentos.dto.asaas.AssinaturaDTO;
 import com.barbearia.pagamentos.dto.asaas.enumerator.BillingTypeEnum;
+import com.barbearia.pagamentos.dto.asaas.enumerator.StatusAssinatura;
 import com.barbearia.pagamentos.entities.AssinaturaEntity;
 import com.barbearia.pagamentos.model.Assinatura;
 import com.barbearia.pagamentos.model.Contrato;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import javax.transaction.Transactional;
 
 import static com.barbearia.pagamentos.dto.asaas.enumerator.BillingTypeEnum.UNDEFINED;
+import static com.barbearia.pagamentos.dto.asaas.enumerator.StatusAssinatura.ACTIVE;
 import static java.time.LocalDateTime.now;
 
 @Service
