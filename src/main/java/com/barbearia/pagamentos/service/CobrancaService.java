@@ -36,7 +36,11 @@ public class CobrancaService {
 
     @Transactional
     public void nova(AsaasCobrancaData c) {
-        repo.save(asaasToEntity.apply(c));
+        if(!isCobrancaDuplicada(c)){
+            repo.save(asaasToEntity.apply(c));
+        } else {
+            log.info("COBRANCA DUPLICADA IGNORADA", c);
+        }
     }
 
     @Transactional
@@ -81,7 +85,8 @@ public class CobrancaService {
 
     @Transactional
     public Cobranca getLastCobrancaPagaByAssinatura(String idAsaas) {
-        return repo.findFirstByAtivoIsTrueAndIdAssinaturaAndStatusOrderByVencimentoEm(idAsaas, RECEIVED)
+        return repo.findFirstByAtivoIsTrueAndIdAssinaturaAndStatusInOrderByVencimentoEmDesc(idAsaas,
+                        Arrays.asList(CONFIRMED, RECEIVED, RECEIVED_IN_CASH))
                 .map(toCobranca)
                 .orElse(Cobranca.builder().build());
 
@@ -99,5 +104,13 @@ public class CobrancaService {
         return c.getPaymentDate() != null ?
                 c.getPaymentDate().atTime(LocalTime.from(now())) :
                 null;
+    }
+
+    // AS VEZES ASAAS RECEBE VALORES DUPLICADOS, AI ELA GERA UMA NOVA COBRANCA
+    // SEM ASSINATURA. DA PROBLEMA NO SISTEMA.
+    // POR ENQUANTO, VAMOS IGNORAR ESTA COBRANCA
+    // SE OCORRER MUITO, VER UMA SOLUÇÃO MELHOR.
+    private boolean isCobrancaDuplicada(AsaasCobrancaData c){
+        return c.getSubscription() == null;
     }
 }

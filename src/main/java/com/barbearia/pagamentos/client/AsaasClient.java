@@ -27,6 +27,9 @@ public interface AsaasClient {
     @GetMapping("customers/{id}")
     AsaasCliente getCliente(@PathVariable("id") String id);
 
+    @DeleteMapping("customers/{id}")
+    AsaasCliente deleteCliente(@PathVariable("id") String id);
+
     @PostMapping("subscriptions")
     @Headers("Content-Type: application/json")
     AsaasAssinatura novaAssinatura(@RequestBody AssinaturaDTO assinatura);
@@ -45,9 +48,6 @@ public interface AsaasClient {
 
     @GetMapping("subscriptions/{id}/payments")
     AsaasCobrancas getCobrancas(@PathVariable("id") String id);
-
-    @DeleteMapping("subscriptions/{id}/")
-    AsaasAssinaturaCancelada cancelarAssinatura(@PathVariable("id") String id);
 
     @GetMapping("subscriptions/{id}")
     AsaasAssinatura getAssinatura(@PathVariable("id") String id);
