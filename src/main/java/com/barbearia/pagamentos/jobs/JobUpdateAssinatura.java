@@ -50,10 +50,9 @@ public class JobUpdateAssinatura {
 
         try {
             log.info("INATIVANDO CLIENTE DE ID: " + a.getIdCliente());
-// POR SEGURANÇA, AS 03 LINHAS ABAIXO FORAM COMENTADAS
-//            asaasClient.deleteCliente(idClienteAsaas);
-//            a.setAtivo(false);
-//            clService.inativar(a.getIdCliente());
+            asaasClient.deleteCliente(idClienteAsaas);
+            a.setAtivo(false);
+            clService.inativar(a.getIdCliente());
             Thread.sleep(1000L);
         } catch (Exception ignored) {
             log.error("ERRO AO INATIVAR CLIENTE.");
