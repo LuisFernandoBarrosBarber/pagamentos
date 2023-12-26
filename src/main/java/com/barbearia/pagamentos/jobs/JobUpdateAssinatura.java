@@ -42,6 +42,10 @@ public class JobUpdateAssinatura {
         assinaturas
                 .stream().filter((this::assinaturaNuncaPagaEAtrasada))
                 .forEach(this::inativaVencidas);
+        assinaturas
+                .stream().filter((this::isAssinaturaDeClienteInativo))
+                .forEach(this::inativaVencidas);
+
     }
 
     private void inativaVencidas(AssinaturaEntity a) {
@@ -49,7 +53,7 @@ public class JobUpdateAssinatura {
         String idClienteAsaas = clService.getById(a.getIdCliente()).getIdAsaas();
 
         try {
-            log.info("INATIVANDO CLIENTE DE ID: " + a.getIdCliente());
+            log.info("INATIVANDO CLIENTE E ASSINATURAS DE ID: " + a.getIdCliente());
             asaasClient.deleteCliente(idClienteAsaas);
             a.setAtivo(false);
             clService.inativar(a.getIdCliente());
@@ -75,5 +79,12 @@ public class JobUpdateAssinatura {
                 .get().getVencimentoEm();
 
         return !temCobrancaPaga && dtLastVencimento.isBefore(LocalDate.now().minusDays(60));
+    }
+
+    private boolean isAssinaturaDeClienteInativo(AssinaturaEntity a) {
+        return !clService
+                .getById(a.getIdCliente())
+                .isAtivo();
+
     }
 }
