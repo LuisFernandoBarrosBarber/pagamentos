@@ -26,13 +26,13 @@ import static java.time.LocalDateTime.now;
 @RequiredArgsConstructor
 public class JobUpdateAssinatura {
 
-    private static final String A_CADA_MEIA_HORA = "59 */30 * * * *";
+    private static final String A_CADA_CINCO_MINUTOS = "59 */5 * * * *";
     private final AssinaturaRepository repository;
     private final AsaasClient asaasClient;
     private final CobrancaService cService;
     private final ClienteService clService;
 
-    @Scheduled(cron = A_CADA_MEIA_HORA)
+    @Scheduled(cron = A_CADA_CINCO_MINUTOS)
     @Transactional
     public void refreshAssinatura() {
         List<AssinaturaEntity> assinaturas = repository.findAllByAtivoIsTrue().toList();
