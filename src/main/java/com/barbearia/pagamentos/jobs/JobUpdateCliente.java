@@ -1,11 +1,8 @@
 package com.barbearia.pagamentos.jobs;
 
 import com.barbearia.pagamentos.client.AsaasClient;
-import com.barbearia.pagamentos.entities.AssinaturaEntity;
 import com.barbearia.pagamentos.entities.ClienteEntity;
-import com.barbearia.pagamentos.model.asaas.AsaasAssinatura;
 import com.barbearia.pagamentos.model.asaas.AsaasCliente;
-import com.barbearia.pagamentos.repository.AssinaturaRepository;
 import com.barbearia.pagamentos.repository.ClienteRepository;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +20,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JobUpdateCliente {
 
-    private static final String A_CADA_MEIA_HORA = "59 */30 * * * *";
+    private static final String A_CADA_CINCO_MINUTOS = "59 */5 * * * *";
     private final ClienteRepository repository;
     private final AsaasClient asaasClient;
 
-    @Scheduled(cron = A_CADA_MEIA_HORA)
+    @Scheduled(cron = A_CADA_CINCO_MINUTOS)
     @Transactional
     public void refreshCliente() {
         List<ClienteEntity> clientes = repository.findAllByAtivoIsTrue().toList();
