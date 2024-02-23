@@ -25,7 +25,7 @@ public class AsaasService {
                     );
         } catch (Exception ex) {
             log.error("ERRO AO TENTAR ATUALIZAR COBRANCA ID: " + c.getPayment().getId(), ex);
-            response = ResponseEntity.status(500).body("");
+            response = ResponseEntity.status(500).body(ex.getMessage());
         }
 
         return response;
