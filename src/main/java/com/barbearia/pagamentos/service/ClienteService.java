@@ -15,9 +15,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 
@@ -36,9 +37,7 @@ public class ClienteService {
     public Cliente novo(String nome, Long id, String cpf, String barbeariaNome) {
 
         if (alreadyCadastrado(id)) {
-            Cliente c = repo.findById(id)
-                    .map(toCliente)
-                    .orElse(Cliente.builder().build());
+            Cliente c = repo.findById(id).map(toCliente).orElse(Cliente.builder().build());
 
             asaasClient.atualizarCliente(c.getIdAsaas(), getDTO(nome, id, cpf, barbeariaNome));
 
@@ -67,6 +66,14 @@ public class ClienteService {
         return assinaturaService.getByCliente(id);
     }
 
+    @Transactional
+    public List<Cliente> getVenceEm(LocalDate dv) {
+        return repo.findAllByAtivoIsTrue().filter(c -> {
+            List<Cobranca> cs = getCobrancasByCliente(c.getId());
+            return cs.stream().anyMatch(co -> co.vencimentoEm.equals(dv) && cobrancaService.isOnlyUmaCobrancaPendente(cs));
+        }).map(toCliente).collect(Collectors.toList());
+    }
+
     public List<Cobranca> getCobrancasByCliente(Long id) {
         testClienteExists(id);
         Assinatura a = assinaturaService.getByCliente(id);
@@ -88,14 +95,12 @@ public class ClienteService {
         return repo.save(c);
     }
 
-    public Cliente getById(Long id){
-        return repo.findById(id)
-                .map(toCliente)
-                .orElse(null);
+    public Cliente getById(Long id) {
+        return repo.findById(id).map(toCliente).orElse(null);
     }
 
-    public void inativar(Long id){
-        repo.findById(id).ifPresent(it-> it.setAtivo(false));
+    public void inativar(Long id) {
+        repo.findById(id).ifPresent(it -> it.setAtivo(false));
     }
 
     private boolean alreadyCadastrado(Long id) {
@@ -109,12 +114,6 @@ public class ClienteService {
     }
 
     private static ClienteDTO getDTO(String nome, Long id, String cpf, String barbeariaNome) {
-        return ClienteDTO.builder()
-                .name(nome)
-                .externalReference(id.toString())
-                .cpfCnpj(cpf)
-                .company(barbeariaNome)
-                .notificationDisabled(true)
-                .build();
+        return ClienteDTO.builder().name(nome).externalReference(id.toString()).cpfCnpj(cpf).company(barbeariaNome).notificationDisabled(true).build();
     }
 }

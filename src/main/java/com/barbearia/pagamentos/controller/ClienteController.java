@@ -6,8 +6,10 @@ import com.barbearia.pagamentos.model.Cliente;
 import com.barbearia.pagamentos.model.Cobranca;
 import com.barbearia.pagamentos.service.ClienteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -44,6 +46,11 @@ public class ClienteController {
     @GetMapping("{id}/assinatura")
     public Assinatura getAssinatura(@PathVariable("id") Long id) {
         return service.getAssinatura(id);
+    }
+
+    @GetMapping("{data}")
+    public List<Cliente> getVenceEm(@PathVariable("data") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
+        return service.getVenceEm(data);
     }
 
 }
