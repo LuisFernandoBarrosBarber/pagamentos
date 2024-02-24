@@ -5,7 +5,6 @@ import com.barbearia.pagamentos.converter.AsaasCobrancaDataToCobrancaEntity;
 import com.barbearia.pagamentos.converter.CobrancaEntityToCobranca;
 import com.barbearia.pagamentos.dto.asaas.CobrancaDTO;
 import com.barbearia.pagamentos.dto.asaas.enumerator.BillingTypeEnum;
-import com.barbearia.pagamentos.entities.CobrancaEntity;
 import com.barbearia.pagamentos.model.Cobranca;
 import com.barbearia.pagamentos.model.asaas.AsaasCobrancaData;
 import com.barbearia.pagamentos.repository.CobrancaRepository;
@@ -36,7 +35,7 @@ public class CobrancaService {
 
     @Transactional
     public void nova(AsaasCobrancaData c) {
-        if(!isCobrancaDuplicada(c)){
+        if (!isCobrancaDuplicada(c)) {
             repo.save(asaasToEntity.apply(c));
         } else {
             log.info("COBRANCA DUPLICADA IGNORADA", c);
@@ -100,6 +99,13 @@ public class CobrancaService {
                 .findFirst();
     }
 
+    public boolean isOnlyUmaCobrancaPendente(List<Cobranca> cs) {
+        return cs
+                .stream()
+                .filter(c -> c.getStatus().equals(PENDING))
+                .count() == 1;
+    }
+
     private LocalDateTime getDataPagamento(AsaasCobrancaData c) {
         return c.getPaymentDate() != null ?
                 c.getPaymentDate().atTime(LocalTime.from(now())) :
@@ -110,7 +116,7 @@ public class CobrancaService {
     // SEM ASSINATURA. DA PROBLEMA NO SISTEMA.
     // POR ENQUANTO, VAMOS IGNORAR ESTA COBRANCA
     // SE OCORRER MUITO, VER UMA SOLUÇÃO MELHOR.
-    private boolean isCobrancaDuplicada(AsaasCobrancaData c){
+    private boolean isCobrancaDuplicada(AsaasCobrancaData c) {
         return c.getSubscription() == null;
     }
 }
