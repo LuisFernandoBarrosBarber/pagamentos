@@ -1,5 +1,9 @@
 package com.barbearia.pagamentos.jobs;
 
+/*
+* ESTA CLASSE INATIVA CLIENTES NO BANCO DE DADOS, CASO ELA TENHA SIDO EXCLUÍDO NO ASAAS.
+* */
+
 import com.barbearia.pagamentos.client.AsaasClient;
 import com.barbearia.pagamentos.entities.ClienteEntity;
 import com.barbearia.pagamentos.model.asaas.AsaasCliente;
@@ -18,7 +22,7 @@ import java.util.List;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class JobUpdateCliente {
+public class JobUpdateClienteBanco {
 
     private static final String A_CADA_CINCO_MINUTOS = "59 */5 * * * *";
     private final ClienteRepository repository;
