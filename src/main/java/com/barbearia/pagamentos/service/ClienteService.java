@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.barbearia.pagamentos.dto.asaas.enumerator.BillingTypeEnum.PIX;
 import static java.time.LocalDateTime.now;
 
 @Service
@@ -49,6 +50,7 @@ public class ClienteService {
             ClienteEntity entity = save(id, c.getId());
             return toCliente.apply(entity);
         } catch (Exception e) {
+            log.info(getDTO(nome, id, cpf, barbeariaNome).toString());
             log.error("ERRO AO SALVAR CLIENTE. CLIENTE ID: " + id, e);
             throw e;
         }
@@ -69,9 +71,16 @@ public class ClienteService {
     @Transactional
     public List<Cliente> getVenceEm(LocalDate dv) {
         return repo.findAllByAtivoIsTrue().filter(c -> {
-            List<Cobranca> cs = getCobrancasByCliente(c.getId());
-            return cs.stream().anyMatch(co -> co.vencimentoEm.equals(dv) && cobrancaService.isOnlyUmaCobrancaPendente(cs));
-        }).map(toCliente).collect(Collectors.toList());
+                    List<Cobranca> cs = getCobrancasByCliente(c.getId());
+                    return cs
+                            .stream()
+                            .anyMatch(co ->
+                                    co.vencimentoEm.equals(dv)
+                                            && co.tipoPagamento.equals(PIX)
+                                            && cobrancaService.isOnlyUmaCobrancaPendente(cs));
+                })
+                .map(toCliente)
+                .collect(Collectors.toList());
     }
 
     public List<Cobranca> getCobrancasByCliente(Long id) {

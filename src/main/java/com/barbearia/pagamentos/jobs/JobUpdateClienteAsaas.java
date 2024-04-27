@@ -1,5 +1,10 @@
 package com.barbearia.pagamentos.jobs;
 
+/*
+ * ESTA CLASSE INATIVA NO ASAAS NO BANCO DE DADOS, CASO ELE TENHA SIDO EXCLUÍDO NO BANCO DE DADOS
+ * OU ESTEJA COM MUITAS FATURAS VENCIDAS.
+ * */
+
 import com.barbearia.pagamentos.client.AsaasClient;
 import com.barbearia.pagamentos.entities.AssinaturaEntity;
 import com.barbearia.pagamentos.model.Cobranca;
@@ -24,7 +29,7 @@ import static java.time.LocalDateTime.now;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class JobUpdateAssinatura {
+public class JobUpdateClienteAsaas {
 
     private static final String A_CADA_CINCO_MINUTOS = "59 */5 * * * *";
     private final AssinaturaRepository repository;
