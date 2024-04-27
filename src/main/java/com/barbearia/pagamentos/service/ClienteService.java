@@ -50,6 +50,7 @@ public class ClienteService {
             ClienteEntity entity = save(id, c.getId());
             return toCliente.apply(entity);
         } catch (Exception e) {
+            log.info(getDTO(nome, id, cpf, barbeariaNome).toString());
             log.error("ERRO AO SALVAR CLIENTE. CLIENTE ID: " + id, e);
             throw e;
         }
