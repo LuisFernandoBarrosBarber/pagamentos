@@ -32,6 +32,7 @@ import static java.time.LocalDateTime.now;
 public class JobUpdateClienteAsaas {
 
     private static final String A_CADA_CINCO_MINUTOS = "59 */5 * * * *";
+    private static final int LIMIT_DAYS_TO_INATIVE = 44; // (44 DIAS) VENCIDAS HA DUAS SEMANAS
     private final AssinaturaRepository repository;
     private final AsaasClient asaasClient;
     private final CobrancaService cService;
@@ -70,7 +71,7 @@ public class JobUpdateClienteAsaas {
 
     private boolean isVencidaHaMuitosDias(AssinaturaEntity a) {
         LocalDateTime dtLastPagamento = cService.getLastCobrancaPagaByAssinatura(a.getIdAssinatura()).getPagamentoEm();
-        return dtLastPagamento != null && dtLastPagamento.isBefore(now().minusDays(60));
+        return dtLastPagamento != null && dtLastPagamento.isBefore(now().minusDays(LIMIT_DAYS_TO_INATIVE));
     }
 
     private boolean assinaturaNuncaPagaEAtrasada(AssinaturaEntity a) {
@@ -83,7 +84,7 @@ public class JobUpdateClienteAsaas {
                 .min(Comparator.comparing(Cobranca::getVencimentoEm))
                 .get().getVencimentoEm();
 
-        return !temCobrancaPaga && dtLastVencimento.isBefore(LocalDate.now().minusDays(60));
+        return !temCobrancaPaga && dtLastVencimento.isBefore(LocalDate.now().minusDays(LIMIT_DAYS_TO_INATIVE));
     }
 
     private boolean isAssinaturaDeClienteInativo(AssinaturaEntity a) {
