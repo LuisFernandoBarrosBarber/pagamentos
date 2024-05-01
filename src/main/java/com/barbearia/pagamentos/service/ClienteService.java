@@ -70,7 +70,7 @@ public class ClienteService {
 
     @Transactional
     public List<Cliente> getVenceEm(LocalDate dv) {
-        return repo.findAllByAtivoIsTrue().filter(c -> {
+        return repo.findAllByAtivoIsTrueAndAssinaturaIsAtivo().filter(c -> {
                     List<Cobranca> cs = getCobrancasByCliente(c.getId());
                     return cs
                             .stream()
