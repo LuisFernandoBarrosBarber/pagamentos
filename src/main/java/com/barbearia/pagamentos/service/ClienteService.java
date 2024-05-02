@@ -36,6 +36,9 @@ public class ClienteService {
 
     @Transactional
     public Cliente novo(String nome, Long id, String cpf, String barbeariaNome) {
+        // DESABILITADO POR QUE ALGUNS CLIENTES ESTAVAM COLOCANDO CARACTER ESPECIAL NO NOME DA BARBEARIA
+        // E O ASAAS NÃO ESTAVA ACEITANDO
+        barbeariaNome = "Nome da barbearia";
 
         if (alreadyCadastrado(id)) {
             Cliente c = repo.findById(id).map(toCliente).orElse(Cliente.builder().build());
