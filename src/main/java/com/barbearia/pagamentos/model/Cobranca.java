@@ -17,9 +17,10 @@ public class Cobranca {
     public boolean ativo;
     public LocalDateTime criadoEm;
     public LocalDate vencimentoEm;
-    public StatusCobranca status;
+    public String status;
     public LocalDateTime pagamentoEm;
     public BillingTypeEnum tipoPagamento;
     public String invoiceUrl;
     public float valor;
+    public String gatewayPagamento;
 }

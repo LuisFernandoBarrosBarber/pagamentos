@@ -48,7 +48,7 @@ public class AssinaturaService {
             throw e;
         }
 
-        return Assinatura.builder().idAsaas(assinatura.getId()).build();
+        return Assinatura.builder().id(assinatura.getId()).build();
 
     }
 
@@ -70,7 +70,7 @@ public class AssinaturaService {
                 .build();
 
         Assinatura aa = Assinatura.builder()
-                .idAsaas(asaasClient.updateAssinatura(id, aDTO).getId())
+                .id(asaasClient.updateAssinatura(id, aDTO).getId())
                 .build();
 
         e.setFormaPagamento(fp);
@@ -100,7 +100,7 @@ public class AssinaturaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Assinatura não encontrada ou finalizada."));
 
         return Assinatura.builder()
-                .idAsaas(a.getIdAssinatura())
+                .id(a.getIdAssinatura())
                 .formaPagamento(a.getFormaPagamento())
                 .build();
     }

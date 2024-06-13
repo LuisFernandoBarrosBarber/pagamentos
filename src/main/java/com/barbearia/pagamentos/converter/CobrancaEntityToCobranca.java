@@ -18,11 +18,12 @@ public class CobrancaEntityToCobranca implements Function<CobrancaEntity, Cobran
                 .ativo(c.isAtivo())
                 .criadoEm(c.getCriadoEm())
                 .pagamentoEm(c.getPagamentoEm())
-                .status(c.getStatus())
+                .status(c.getStatus().toString())
                 .vencimentoEm(c.getVencimentoEm())
                 .valor(c.getValor())
                 .invoiceUrl(c.getInvoiceUrl())
                 .tipoPagamento(c.getTipoPagamento())
+                .gatewayPagamento("ASAAS")
                 .build();
     }
 }
