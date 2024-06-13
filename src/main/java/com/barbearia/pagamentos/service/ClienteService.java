@@ -63,7 +63,7 @@ public class ClienteService {
     public Assinatura updateAssinatura(Long id, float value, BillingTypeEnum fp) {
         testClienteExists(id);
         Assinatura a = assinaturaService.getByCliente(id);
-        return assinaturaService.updateAssinatura(a.getIdAsaas(), value, fp);
+        return assinaturaService.updateAssinatura(a.getId(), value, fp);
     }
 
     public Assinatura getAssinatura(Long id) {
@@ -89,13 +89,13 @@ public class ClienteService {
     public List<Cobranca> getCobrancasByCliente(Long id) {
         testClienteExists(id);
         Assinatura a = assinaturaService.getByCliente(id);
-        return cobrancaService.getByAssinatura(a.getIdAsaas());
+        return cobrancaService.getByAssinatura(a.getId());
     }
 
     public Cobranca getLastCobrancaPaga(Long id) {
         testClienteExists(id);
         Assinatura a = assinaturaService.getByCliente(id);
-        return cobrancaService.getLastCobrancaPagaByAssinatura(a.getIdAsaas());
+        return cobrancaService.getLastCobrancaPagaByAssinatura(a.getId());
     }
 
     public ClienteEntity save(Long id, String idAssas) {

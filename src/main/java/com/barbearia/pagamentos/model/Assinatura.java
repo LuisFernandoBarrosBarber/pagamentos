@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 @Builder
 public class Assinatura {
-    String idAsaas;
+    String id;
     BillingTypeEnum formaPagamento;
 }
