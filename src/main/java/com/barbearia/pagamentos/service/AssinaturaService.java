@@ -4,7 +4,6 @@ import com.barbearia.pagamentos.client.AsaasClient;
 import com.barbearia.pagamentos.configuration.excetion.ResourceNotFoundException;
 import com.barbearia.pagamentos.dto.asaas.AssinaturaDTO;
 import com.barbearia.pagamentos.dto.asaas.enumerator.BillingTypeEnum;
-import com.barbearia.pagamentos.dto.asaas.enumerator.StatusAssinatura;
 import com.barbearia.pagamentos.entities.AssinaturaEntity;
 import com.barbearia.pagamentos.model.Assinatura;
 import com.barbearia.pagamentos.model.Contrato;
@@ -16,12 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
-import static com.barbearia.pagamentos.dto.asaas.enumerator.BillingTypeEnum.UNDEFINED;
-import static com.barbearia.pagamentos.dto.asaas.enumerator.StatusAssinatura.ACTIVE;
 import static java.time.LocalDateTime.now;
 
 @Service
@@ -103,6 +100,29 @@ public class AssinaturaService {
                 .id(a.getIdAssinatura())
                 .formaPagamento(a.getFormaPagamento())
                 .build();
+    }
+
+    @Transactional
+    public Assinatura getByAllProfissionaisDaBarbearia(List<Long> idsP) {
+        List<Assinatura> assinaturas = new ArrayList<>();
+        idsP.forEach(id -> {
+            repo.getByIdClienteAndAtivoIsTrue(id).ifPresent(a -> {
+                assinaturas.add(Assinatura.builder()
+                        .id(a.getIdAssinatura())
+                        .formaPagamento(a.getFormaPagamento())
+                        .build());
+            });
+        });
+
+        // CASO NÃO ENCONTRE NENHUMA ASSINATURA ATIVA PARA TODOS OS PROFISSIONAIS DA BARBEARIA
+        if (assinaturas.isEmpty()) {
+            throw new ResourceNotFoundException("Assinatura não encontrada ou finalizada.");
+            // CASO A BARBEARIA TENHA MAIS DE UMA ASSINATURA ATIVA
+        } else if (assinaturas.size() > 1) {
+            throw new RuntimeException("Essa barbearia possui mais de uma assinatura ativa. Contate o suporte!");
+        }
+        // APENAS UMA ASSINATURA ATIVA, TUDO OK!
+        return assinaturas.get(0);
     }
 
 

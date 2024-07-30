@@ -71,6 +71,10 @@ public class ClienteService {
         return assinaturaService.getByCliente(id);
     }
 
+    public Assinatura getAssinatura(List<Long> ids) {
+        return assinaturaService.getByAllProfissionaisDaBarbearia(ids);
+    }
+
     @Transactional
     public List<Cliente> getVenceEm(LocalDate dv) {
         return repo.findAllByAtivoIsTrueAndAssinaturaIsAtivo().filter(c -> {
@@ -86,8 +90,12 @@ public class ClienteService {
                 .collect(Collectors.toList());
     }
 
+    public List<Cobranca> getCobrancasByClientes(List<Long> ids) {
+        Assinatura a = assinaturaService.getByAllProfissionaisDaBarbearia(ids);
+        return cobrancaService.getByAssinatura(a.getId());
+    }
+
     public List<Cobranca> getCobrancasByCliente(Long id) {
-        testClienteExists(id);
         Assinatura a = assinaturaService.getByCliente(id);
         return cobrancaService.getByAssinatura(a.getId());
     }
