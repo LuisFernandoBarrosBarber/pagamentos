@@ -19,9 +19,14 @@ public class ClienteController {
 
     private final ClienteService service;
 
-    @GetMapping("{id}/cobrancas")
-    public List<Cobranca> getCobrancas(@PathVariable("id") Long id) {
-        return service.getCobrancasByCliente(id);
+//    @GetMapping("{id}/cobrancas")
+//    public List<Cobranca> getCobrancas(@PathVariable("id") Long id) {
+//        return service.getCobrancasByCliente(id);
+//    }
+
+    @GetMapping("lote/cobrancas")
+    public List<Cobranca> getCobrancas(@RequestParam("ids") List<Long> ids) {
+        return service.getCobrancasByClientes(ids);
     }
 
     @GetMapping("{id}/last-cobranca-paga")
@@ -43,9 +48,14 @@ public class ClienteController {
         return service.novo(nome, id, cpf, barbeariaNome);
     }
 
-    @GetMapping("{id}/assinatura")
-    public Assinatura getAssinatura(@PathVariable("id") Long id) {
-        return service.getAssinatura(id);
+//    @GetMapping("{id}/assinatura")
+//    public Assinatura getAssinatura(@PathVariable("id") Long id) {
+//        return service.getAssinatura(id);
+//    }
+
+    @GetMapping("/assinatura-by-profissionais")
+    public Assinatura getAssinatura(@RequestParam("ids") List<Long> ids) {
+        return service.getAssinatura(ids);
     }
 
     @GetMapping("{data}")
