@@ -1,8 +1,8 @@
 package com.barbearia.pagamentos.jobs;
 
 /*
-* ESTA CLASSE INATIVA CLIENTES NO BANCO DE DADOS, CASO ELA TENHA SIDO EXCLUÍDO NO ASAAS.
-* */
+ * ESTA CLASSE INATIVA CLIENTES NO BANCO DE DADOS, CASO ELA TENHA SIDO EXCLUÍDO NO ASAAS.
+ * */
 
 import com.barbearia.pagamentos.client.AsaasClient;
 import com.barbearia.pagamentos.entities.ClienteEntity;
@@ -24,11 +24,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JobUpdateClienteBanco {
 
-    private static final String A_CADA_CINCO_MINUTOS = "59 */5 * * * *";
+    private static final String A_CADA_TRINTA_MINUTOS = "59 */30 * * * *";
     private final ClienteRepository repository;
     private final AsaasClient asaasClient;
 
-    @Scheduled(cron = A_CADA_CINCO_MINUTOS)
+    @Scheduled(cron = A_CADA_TRINTA_MINUTOS)
     @Transactional
     public void refreshCliente() {
         List<ClienteEntity> clientes = repository.findAllByAtivoIsTrue().toList();
@@ -36,17 +36,23 @@ public class JobUpdateClienteBanco {
     }
 
     private void updateStatus(ClienteEntity c) {
-        try {
-            Thread.sleep(1000L);
-            AsaasCliente ac = asaasClient.getCliente(c.getIdAsaas());
-            if (ac.isDeleted()) {
-                log.info("INATIVANDO CLIENTE DE ID: " + c.getIdAsaas());
-                c.setAtivo(!ac.isDeleted());
-            }
-        } catch (FeignException.NotFound e) {
-            log.info("CLIENTE NÃO ENCONTRADO NO ASAAS: " + c.getIdAsaas());
-        } catch (Exception ex) {
-            log.error("ERRO AO CONSULTAR CLIENTE ID: " + c.getIdAsaas(), ex);
+        AsaasCliente ac = getClienteInAsaas(c.getIdAsaas());
+        if (ac != null && ac.isDeleted()) {
+            log.info("INATIVANDO CLIENTE DE ID: {}", c.getIdAsaas());
+            c.setAtivo(!ac.isDeleted());
         }
+
+    }
+
+    private AsaasCliente getClienteInAsaas(String idAsaas) {
+        try {
+            Thread.sleep(3000L);
+            return asaasClient.getCliente(idAsaas);
+        } catch (FeignException.NotFound e) {
+            log.info("CLIENTE NÃO ENCONTRADO NO ASAAS: {}", idAsaas);
+        } catch (Exception ex) {
+            log.error("ERRO AO CONSULTAR CLIENTE ID: {}", idAsaas, ex);
+        }
+        return null;
     }
 }

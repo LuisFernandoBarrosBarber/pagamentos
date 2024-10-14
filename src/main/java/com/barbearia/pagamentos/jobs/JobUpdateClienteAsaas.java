@@ -82,7 +82,8 @@ public class JobUpdateClienteAsaas {
 
         LocalDate dtLastVencimento = cs.stream()
                 .min(Comparator.comparing(Cobranca::getVencimentoEm))
-                .get().getVencimentoEm();
+                .orElse(Cobranca.builder().vencimentoEm(LocalDate.now()).build())
+                .getVencimentoEm();
 
         return !temCobrancaPaga && dtLastVencimento.isBefore(LocalDate.now().minusDays(LIMIT_DAYS_TO_INATIVE));
     }
