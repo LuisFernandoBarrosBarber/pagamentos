@@ -4,6 +4,7 @@ import com.barbearia.pagamentos.configuration.OAuthFeignConfig;
 import com.barbearia.pagamentos.dto.asaas.AssinaturaDTO;
 import com.barbearia.pagamentos.dto.asaas.ClienteDTO;
 import com.barbearia.pagamentos.dto.asaas.CobrancaDTO;
+import com.barbearia.pagamentos.dto.asaas.ConfigNotaFiscalAssinaturaDTO;
 import com.barbearia.pagamentos.model.Cobranca;
 import com.barbearia.pagamentos.model.asaas.*;
 import feign.Headers;
@@ -51,4 +52,8 @@ public interface AsaasClient {
 
     @GetMapping("subscriptions/{id}")
     AsaasAssinatura getAssinatura(@PathVariable("id") String id);
+
+    @PostMapping("subscriptions/{id}/invoiceSettings")
+    void setNewConfigNotaFiscal(@PathVariable("id") String id,
+                                           @RequestBody ConfigNotaFiscalAssinaturaDTO nfConfig);
 }

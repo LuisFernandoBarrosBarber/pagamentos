@@ -24,11 +24,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JobUpdateClienteBanco {
 
-    private static final String A_CADA_TRINTA_MINUTOS = "59 */30 * * * *";
+    private static final String A_CADA_CINCO_MINUTOS = "59 */5 * * * *";
     private final ClienteRepository repository;
     private final AsaasClient asaasClient;
 
-    @Scheduled(cron = A_CADA_TRINTA_MINUTOS)
+    @Scheduled(cron = A_CADA_CINCO_MINUTOS)
     @Transactional
     public void refreshCliente() {
         List<ClienteEntity> clientes = repository.findAllByAtivoIsTrue().toList();
@@ -46,7 +46,7 @@ public class JobUpdateClienteBanco {
 
     private AsaasCliente getClienteInAsaas(String idAsaas) {
         try {
-            Thread.sleep(3000L);
+            Thread.sleep(1500L);
             return asaasClient.getCliente(idAsaas);
         } catch (FeignException.NotFound e) {
             log.info("CLIENTE NÃO ENCONTRADO NO ASAAS: {}", idAsaas);

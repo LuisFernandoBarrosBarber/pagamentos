@@ -35,7 +35,9 @@ public class ClienteService {
     private final AssinaturaService assinaturaService;
 
     @Transactional
-    public Cliente novo(String nome, Long id, String cpf, String barbeariaNome) {
+    public Cliente novo(String nome, Long id, String cpf, String barbeariaNome,
+                        String cep, String rua, String bairro, String cidade, String numero, String email,
+                        String telefone) {
         // DESABILITADO POR QUE ALGUNS CLIENTES ESTAVAM COLOCANDO CARACTER ESPECIAL NO NOME DA BARBEARIA
         // E O ASAAS NÃO ESTAVA ACEITANDO
         barbeariaNome = "Nome da barbearia";
@@ -43,17 +45,20 @@ public class ClienteService {
         if (alreadyCadastrado(id)) {
             Cliente c = repo.findById(id).map(toCliente).orElse(Cliente.builder().build());
 
-            asaasClient.atualizarCliente(c.getIdAsaas(), getDTO(nome, id, cpf, barbeariaNome));
+            asaasClient.atualizarCliente(c.getIdAsaas(), getDTO(nome, id, cpf, barbeariaNome, cep, rua, bairro,
+                    cidade, numero, email, telefone));
 
             return c;
         }
 
         try {
-            AsaasCliente c = asaasClient.novoCliente(getDTO(nome, id, cpf, barbeariaNome));
+            AsaasCliente c = asaasClient.novoCliente(getDTO(nome, id, cpf, barbeariaNome, cep, rua, bairro,
+                    cidade, numero, email, telefone));
             ClienteEntity entity = save(id, c.getId());
             return toCliente.apply(entity);
         } catch (Exception e) {
-            log.info(getDTO(nome, id, cpf, barbeariaNome).toString());
+            log.info(getDTO(nome, id, cpf, barbeariaNome, cep, rua, bairro, cidade, numero,
+                    email, telefone).toString());
             log.error("ERRO AO SALVAR CLIENTE. CLIENTE ID: " + id, e);
             throw e;
         }
@@ -64,11 +69,6 @@ public class ClienteService {
         testClienteExists(id);
         Assinatura a = assinaturaService.getByCliente(id);
         return assinaturaService.updateAssinatura(a.getId(), value, fp);
-    }
-
-    public Assinatura getAssinatura(Long id) {
-        testClienteExists(id);
-        return assinaturaService.getByCliente(id);
     }
 
     public Assinatura getAssinatura(List<Long> ids) {
@@ -133,7 +133,29 @@ public class ClienteService {
         }
     }
 
-    private static ClienteDTO getDTO(String nome, Long id, String cpf, String barbeariaNome) {
-        return ClienteDTO.builder().name(nome).externalReference(id.toString()).cpfCnpj(cpf).company(barbeariaNome).notificationDisabled(true).build();
+    private static ClienteDTO getDTO(String nome, Long id, String cpf, String barbeariaNome,
+                                     String cep, String rua, String bairro, String cidade, String numero,
+                                     String email, String telefone) {
+        return ClienteDTO
+                .builder()
+                .name(nome)
+                .externalReference(id.toString()).cpfCnpj(cpf)
+                .company(barbeariaNome)
+                .notificationDisabled(true)
+                .province(bairro)
+                .city(cidade)
+                .postalCode(formatarCep(cep))
+                .addressNumber(numero)
+                .address(rua)
+                .email(email)
+                .mobilePhone(telefone)
+                .build();
+    }
+
+    public static String formatarCep(String cep) {
+        if (cep != null && cep.length() == 8) {
+            return cep.substring(0, 5) + "-" + cep.substring(5);
+        }
+        throw new RuntimeException("ERRO AO FORMATAR CEP: " + cep);
     }
 }

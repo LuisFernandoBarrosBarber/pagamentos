@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=2.9.5
+VERSION=3.1.0
 
 docker build -t "luisfernandobarros/barbearia-pagamentos:$VERSION" .
 

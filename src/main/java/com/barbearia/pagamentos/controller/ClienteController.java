@@ -42,16 +42,19 @@ public class ClienteController {
     }
 
     @PostMapping
-    public Cliente novo(@RequestParam("id") Long id, @RequestParam("nome") String nome,
+    public Cliente novo(@RequestParam(value = "cep", required = false) String cep,
+                        @RequestParam(value = "rua", required = false) String rua,
+                        @RequestParam(value = "bairro", required = false) String bairro,
+                        @RequestParam(value = "cidade", required = false) String cidade,
+                        @RequestParam(value = "numero", required = false) String numero,
+                        @RequestParam(value = "email") String email,
+                        @RequestParam(value = "telefone") String telefone,
+                        @RequestParam("id") Long id,
+                        @RequestParam("nome") String nome,
                         @RequestParam("cpf") String cpf,
                         @RequestParam("barbearia-nome") String barbeariaNome) {
-        return service.novo(nome, id, cpf, barbeariaNome);
+        return service.novo(nome, id, cpf, barbeariaNome, cep, rua, bairro, cidade, numero, email, telefone);
     }
-
-//    @GetMapping("{id}/assinatura")
-//    public Assinatura getAssinatura(@PathVariable("id") Long id) {
-//        return service.getAssinatura(id);
-//    }
 
     @GetMapping("/assinatura-by-profissionais")
     public Assinatura getAssinatura(@RequestParam("ids") List<Long> ids) {
