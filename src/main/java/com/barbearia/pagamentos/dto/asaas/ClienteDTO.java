@@ -10,5 +10,12 @@ public class ClienteDTO {
     String externalReference;
     String cpfCnpj;
     String company;
+    String email;
+    String mobilePhone;
+    String address; // RUA
+    String addressNumber;
+    String province; // BAIRRO
+    String postalCode;
+    String city;
     boolean notificationDisabled;
 }
