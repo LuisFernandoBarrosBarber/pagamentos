@@ -42,7 +42,7 @@ public class AssinaturaService {
             salvaCobrancas(assinatura);
             save(assinatura, co);
             // DESABILITADO AQUI. HABILITAR QUANDO FOR PRA EMITIR NOTA FISCAL MESMO.
-            // notaFiscalService.newConfigNF(assinatura.getId());
+            notaFiscalService.newConfigNF(assinatura.getId());
         } catch (Exception e) {
             log.error("ERRO AO GERAR ASSINATURA/COBRANCA DO CLIENTE " + co.getId(), e);
             throw e;

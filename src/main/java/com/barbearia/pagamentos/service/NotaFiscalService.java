@@ -24,7 +24,6 @@ public class NotaFiscalService {
             asaasClient.setNewConfigNotaFiscal(idAssinatura, dto);
         } catch (Exception e) {
             log.error("ERRO AO GERAR CONFIGURACAO DE NOTA FISCAL. ID ASSINATURA: " + idAssinatura, e);
-            throw e;
         }
     }
 }
