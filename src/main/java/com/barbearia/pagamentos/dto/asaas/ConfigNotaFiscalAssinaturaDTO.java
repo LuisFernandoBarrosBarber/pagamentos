@@ -21,10 +21,10 @@ public class ConfigNotaFiscalAssinaturaDTO {
     String municipalServiceId = "107761";
 
     @Builder.Default
-    String municipalServiceCode = "1.01";
+    String municipalServiceCode = "17.02 | 8219-9/99 - Datilografia, digitação, estenografia, expediente, secretaria em geral, resposta audível, redação, edição, interpretação, revisão, tradução, apoio e infra- estrutura administrativa e congêneres.";
 
     @Builder.Default
-    String municipalServiceName = "Análise e desenvolvimento de sistemas.";
+    String municipalServiceName = "17.02 | 8219-9/99 - Datilografia, digitação, estenografia, expediente, secretaria em geral, resposta audível, redação, edição, interpretação, revisão, tradução, apoio e infra- estrutura administrativa e congêneres.";
 
     @Builder.Default
     TaxesNfDTO taxes = TaxesNfDTO.builder().build();

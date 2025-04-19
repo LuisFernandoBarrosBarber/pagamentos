@@ -20,5 +20,5 @@ public class TaxesNfDTO {
     @Builder.Default
     int pis = 0;
     @Builder.Default
-    int iss = 0;
+    Double iss = 2.5;
 }
